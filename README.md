@@ -72,6 +72,20 @@ $ bin/mlearn --help
 ```
 ![](images/mlearn_help.png)
 ### example 1: regression
+This example illustrates solving a regression probplem with MLP. The train and test datasets are "oilTrn.dat" and "oilTst.dat" located in the data/ directory. These are slightly modified version of those included with Netlab(cite). There are 500 samples in each of the dataset. Each sample consists of 14 vlaues delimited by commas (feature and label dimensions are 12 and 2 respectively). The following trains a model with the following parameters:
+```
+mode : train
+optimizer: sgd
+cost_function: mse
+dataset: data/oilTrn.dat
+hidde_dim: 10
+output_activation: sigmoid
+hidden_activation: sigmoid
+num_epochs: 30
+model_file: oil_model.bin
+feature_dim: 12
+label_dim: 2
+```
 ```bash
 bin/mlearn -m train -o sgd -c mse -d data/oilTrn.dat  -D 10 -A sigmoid -n 30  -f oil_model.bin -F 12 -L 2
 ```
