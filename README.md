@@ -3,8 +3,8 @@ An Implementation of Mutli-layer Perceptron in C++.
 
 ## Features
 ### General
-* Single-threaded CPU only
-* Reasonable fast
+* Single-threaded, CPU only
+* Reasonably fast
 * Simple C++ constructs
 * Linux platform currently supported
 * Feed-forward networks
@@ -67,6 +67,11 @@ Each row of sample should be concatenation of features and labels using comma as
 ```
 In order to know  the parameters and usage:
 ```bash
-$ mlearn -h 
-$ mlearn --help
+$ bin/mlearn -h 
+$ bin/mlearn --help
+```
+![](images/mlearn_help.png)
+### example 1: regression
+```bash
+bin/mlearn -m train -o sgd -c mse -d data/oilTrn.dat  -D 10 -A sigmoid -n 30  -f oil_model.bin -F 12 -L 2
 ```
