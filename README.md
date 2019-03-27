@@ -1,7 +1,9 @@
 # mLEARn
 An Implementation of Mutli-layer Perceptron in C++. 
-
-## Features
+## Table of contents
+1. [Features](#1-features)
+2. [Building from Source](#2-building-from-source)
+## 1. Features
 ### general
 * Single-threaded, CPU only
 * Reasonably fast
@@ -32,7 +34,7 @@ An Implementation of Mutli-layer Perceptron in C++.
 * L1/L2 regularization
 * Momentum
 
-## Building from Source
+## 2. Building from Source
 ### dependencies
 * C++11 compiler
 * Boost (program_options, unit_test_framework, serialization, ublas)
