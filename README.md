@@ -97,11 +97,7 @@ beta: 0.05
 ```bash
 bin/mlearn -m train -o sgd -c mse -d data/oilTrn.dat  -D 10 -A sigmoid -n 30  -f oil_model.bin -F 12 -L 2 -R L2 -l 0.05 -b 0.05
 ```
-The following is used to test the model "oil_model.bin" on data/oilTst.dat:
-```bash
- bin/mlearn -m test  -d data/oilTst.dat  -f oil_model.bin -F 12 -L 2 -c mse
-```
-So the following parameters must be specified:
+The following parameters must be specified to test the model:
 ```
 mode : test
 cost_function: mse
@@ -110,3 +106,8 @@ model_file: oil_model.bin
 feature_dim: 12
 label_dim: 2
 ```
+And the following is used to test the model "oil_model.bin" on data/oilTst.dat:
+```bash
+ bin/mlearn -m test  -d data/oilTst.dat  -f oil_model.bin -F 12 -L 2 -c mse
+```
+
