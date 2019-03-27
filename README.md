@@ -3,6 +3,7 @@ An Implementation of Mutli-layer Perceptron in C++.
 ## Table of contents
 1. [Features](#1-features)
 2. [Building from Source](#2-building-from-source)
+3. [Running the mlearn Program](#3-running-the-mlearn-program)
 ## 1. Features
 ### general
 * Single-threaded, CPU only
@@ -48,7 +49,7 @@ $ cd build
 $ cmake  ..
 $ make 
 ```
-## Running the mlearn Program
+## 3. Running the mlearn Program
 The executables (mlearn and unit_test) will reside in bin/. You can run from the project directory or put the binaries in /usr/local/bin/ or execution path. Note that the programs look for the MNIST dataset in the data/ directory. So the data/ directory should be in your run directory, if you want to run unit test or train/test with MNIST.
 
 ### data format
