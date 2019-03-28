@@ -4,6 +4,8 @@ An Implementation of a Mutli-layer Perceptron in C++.
 1. [Features](#1-features)
 2. [Building from Source](#2-building-from-source)
 3. [Running the mlearn Program](#3-running-the-mlearn-program)
+4. [Developer API](#4-developer-api)
+5. [Contibuting and Bug Reporting](#5-contibuting-and-bug-reporting)
 ## 1. Features
 ### general
 * Single-threaded, CPU only
@@ -158,4 +160,7 @@ And the following is used to test the model "mnist_model.bin" on data/mnist_test
  bin/mlearn -m test  -d mnist  -f mnist_model.bin -F 784 -L 10 -c crossentropy
 ```
 
-
+## 4. Developer API
+coming...
+## 5. Contibuting and Bug Reporting
+mLEARn is open-source; therefore contributions from developers and deep learning enthusiasts are welcomed. Issues/bug reports can be filled at https://github.com/kalu-o/mLEARn/issues.
