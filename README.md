@@ -163,4 +163,5 @@ And the following is used to test the model "mnist_model.bin" on data/mnist_test
 ## 4. Developer API
 coming...
 ## 5. Contibuting and Bug Reporting
-mLEARn is open-source; therefore contributions from developers and deep learning enthusiasts are welcomed. Issues/bug reports can be filled at https://github.com/kalu-o/mLEARn/issues.
+mLEARn is open-source; therefore contributions from developers and deep learning enthusiasts are welcome. Issues/bug reports can be opened at https://github.com/kalu-o/mLEARn/issues. Pull requests and changes are also welcome.
+
