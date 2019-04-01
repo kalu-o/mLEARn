@@ -4,7 +4,7 @@ src="images/logo.png" style="background-color:rgba(0,0,0,0);" height=230 alt="mL
 </h2>
 
 # mLEARn
-An Implementation of a Mutli-layer Perceptron in C++. 
+An Implementation of Mutli-layer Perceptron in C++. 
 ## Table of Contents
 1. [Features](#1-features)
 2. [Building from Source](#2-building-from-source)
