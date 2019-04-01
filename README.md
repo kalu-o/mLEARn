@@ -175,7 +175,7 @@ And the following is used to test the model "mnist_model.bin" on data/mnist_test
 ```
 
 ## 4. Developer API
-api_doc.pdf us the programming API located in the doc/ directory.
+api_doc.pdf is the programming API located in the doc/ directory.
 
 ## 5. Contibuting and Bug Reporting
 mLEARn is open-source; therefore contributions from developers and deep learning enthusiasts are welcome. Issues/bug reports can be opened at https://github.com/kalu-o/mLEARn/issues. Pull requests and changes are also welcome.
