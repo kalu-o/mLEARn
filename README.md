@@ -61,6 +61,10 @@ $ cd build
 $ cmake  ..
 $ make 
 ```
+These are contents of the file "install.sh", so running the script also build the libraries and binaries.
+```bash
+$./install.sh
+```
 ## 3. Running the mlearn Program
 The executables (mlearn and unit_test) will reside in bin/. You can run from the project directory or put the binaries in /usr/local/bin/ or execution path. Note that the programs look for the MNIST dataset in the data/ directory. So the data/ directory should be in your run directory, if you want to run unit test or train/test with MNIST. 
 
