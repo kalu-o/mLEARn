@@ -1,3 +1,8 @@
+<h2 align="center">
+<img
+src="images/logo.png" style="background-color:rgba(0,0,0,0);" height=230 alt="mLEARn: an implementation of multi-layer perceptron in C++">
+</h2>
+
 # mLEARn
 An Implementation of a Mutli-layer Perceptron in C++. 
 ## Table of contents
