@@ -1,4 +1,4 @@
-project(mlearn) # the project name
+project(mLEARn) # the project name
 cmake_minimum_required(VERSION 3.5.1) # 
 set(Boost_USE_STATIC_LIBS   ON)
 set(CMAKE_CXX_STANDARD 11) # Use c++11.
