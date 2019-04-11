@@ -185,14 +185,16 @@ Layer<T>& Layer<T>::updateParams(
                     bool change_rate,
                     std::string id)
 {
+    static int update_count = 0;
     rate/=batch_size;
     mublas::matrix<T> adagrad_rates(output_dim, input_dim, rate);
     NetNode<T> out = delta_b.scalarMultiply(rate);
     bias = bias - out;
+    ++update_count;
     if (id == "rmsprop")
     {
         double mu = 0.9;
-        sq_delta_w = mu * sq_delta_w + (1 - mu) * element_prod(delta_w, delta_w);
+        sq_delta_w = mu * sq_delta_w/update_count + (1 - mu) * element_prod(delta_w, delta_w);
     }
     else if (id == "adagrad")
     {

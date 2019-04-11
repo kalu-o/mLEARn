@@ -39,6 +39,7 @@ Change Log: 01.04.2019 - Version 1.0.0
 #include <stdexcept>
 #include <chrono>
 #include <ctime>
+#include <random>
 #define EPSILON 1e-2
 #define ADAGRAD_EPSILON 1e-8
 #define MAX_MNIST_VALUE 255
