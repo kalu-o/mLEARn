@@ -123,75 +123,75 @@ int main(int argc, char** argv)
     std::string output_activation = "sigmoid";
     std::string model_file = "temp.bin";
     po::variables_map vm;
-	try
-	{
+    try
+    {
 
-		po::options_description desc("Training Options");
-		desc.add_options()
-			("help,h", "gives information about usage")
-			("mode,m", po::value<std::string>(&mode)->default_value("train"), "program usage mode: either train or test")
-			("optimizer,o", po::value<std::string>(&optimizer)->default_value("sgd"), "optimization algorithm used: sgd, adagrad, rmsprop")
-			("cost_function,c", po::value<std::string>(&cost_function)->default_value("crossentropy"), "cost function used: mse, mae, crossentropy")
-			("learning_rate,r", po::value<double>(&learning_rate)->default_value(0.05), "learning rate used for training")
-			("batch_size,s", po::value<uint32_t>(&batch_size)->default_value(10), "batch size used for training")
-			("num_epochs,n", po::value<uint32_t>(&num_epochs)->default_value(20), "number of training epochs")
-			("lambda,l", po::value<double>(&lambda)->default_value(0.0), "regularization parameter used for training")
-			("reg,R", po::value<std::string>(&reg)->default_value("None"), "type of regularization (L1, L2 or None)")
-			("beta,b", po::value<double>(&beta)->default_value(0.0), "momentum term/parameter")
-			("dataset,d", po::value<std::string>(&dataset)->default_value("mnist"), "the path to the train or test file")
-			("header,H", po::value<bool>(&header)->default_value(false), "determines whether dataset file contains header")
-			("feature_dim,F", po::value<uint64_t>(&feature_dim)->default_value(784), "number of input points/features")
-			("label_dim,L", po::value<uint64_t>(&label_dim)->default_value(10), "number of output points/labels")
-			("test_size,t", po::value<double>(&test_size)->default_value(0.0), "% of train dataset used for validation")
-			("num_hidden_layers,N", po::value<uint16_t>(&num_hidden_layers)->default_value(1), "number of hidden layers")
-			("hidden_dim,D", po::value<uint64_t>(&hidden_dim)->default_value(100), "number of hidden units")
-			("hidden_activation,a", po::value<std::string>(&hidden_activation)->default_value("sigmoid"), "activation function of hidden layers")
-			("output_activation,A", po::value<std::string>(&output_activation)->default_value("softmax"), "activation function of output layer")
-			("model_file,f", po::value<std::string>(&model_file)->default_value("temp.bin"), "path to model file")
-			;
+        po::options_description desc("Training Options");
+        desc.add_options()
+            ("help,h", "gives information about usage")
+            ("mode,m", po::value<std::string>(&mode)->default_value("train"), "program usage mode: either train or test")
+            ("optimizer,o", po::value<std::string>(&optimizer)->default_value("sgd"), "optimization algorithm used: sgd, adagrad, rmsprop")
+            ("cost_function,c", po::value<std::string>(&cost_function)->default_value("crossentropy"), "cost function used: mse, mae, crossentropy")
+            ("learning_rate,r", po::value<double>(&learning_rate)->default_value(0.05), "learning rate used for training")
+            ("batch_size,s", po::value<uint32_t>(&batch_size)->default_value(10), "batch size used for training")
+            ("num_epochs,n", po::value<uint32_t>(&num_epochs)->default_value(20), "number of training epochs")
+            ("lambda,l", po::value<double>(&lambda)->default_value(0.0), "regularization parameter used for training")
+            ("reg,R", po::value<std::string>(&reg)->default_value("None"), "type of regularization (L1, L2 or None)")
+            ("beta,b", po::value<double>(&beta)->default_value(0.0), "momentum term/parameter")
+            ("dataset,d", po::value<std::string>(&dataset)->default_value("mnist"), "the path to the train or test file")
+            ("header,H", po::value<bool>(&header)->default_value(false), "determines whether dataset file contains header")
+            ("feature_dim,F", po::value<uint64_t>(&feature_dim)->default_value(784), "number of input points/features")
+            ("label_dim,L", po::value<uint64_t>(&label_dim)->default_value(10), "number of output points/labels")
+            ("test_size,t", po::value<double>(&test_size)->default_value(0.0), "% of train dataset used for validation")
+            ("num_hidden_layers,N", po::value<uint16_t>(&num_hidden_layers)->default_value(1), "number of hidden layers")
+            ("hidden_dim,D", po::value<uint64_t>(&hidden_dim)->default_value(100), "number of hidden units")
+            ("hidden_activation,a", po::value<std::string>(&hidden_activation)->default_value("sigmoid"), "activation function of hidden layers")
+            ("output_activation,A", po::value<std::string>(&output_activation)->default_value("softmax"), "activation function of output layer")
+            ("model_file,f", po::value<std::string>(&model_file)->default_value("temp.bin"), "path to model file")
+            ;
 
-		po::store(po::parse_command_line(argc, argv, desc), vm);
-		po::notify(vm);
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);
 
 
 
-		if (vm.count("help"))
-		{
-			std::cout << desc << std::endl;
-			return 0;
-		}
-		if (vm.count("mode"))mode = vm["mode"].as<std::string>();
-		if (vm.count("optimizer"))optimizer = vm["optimizer"].as<std::string>();
-		if (vm.count("cost_function"))cost_function = vm["cost_function"].as<std::string>();
-		if (vm.count("learning_rate"))learning_rate = vm["learning_rate"].as<double>();
-		if (vm.count("batch_size"))batch_size = vm["batch_size"].as<uint32_t>();
-		if (vm.count("num_epochs"))num_epochs = vm["num_epochs"].as<uint32_t>();
-		if (vm.count("lambda"))lambda = vm["lambda"].as<double>();
-		if (vm.count("reg"))reg = vm["reg"].as<std::string>();
-		if (vm.count("beta"))beta = vm["beta"].as<double>();
-		if (vm.count("dataset"))dataset = vm["dataset"].as<std::string>();
-		if (vm.count("header"))header = vm["header"].as<bool>();
-		if (vm.count("feature_dim"))feature_dim = vm["feature_dim"].as<uint64_t>();
-		if (vm.count("label_dim"))label_dim = vm["label_dim"].as<uint64_t>();
-		if (vm.count("test_size"))test_size = vm["test_size"].as<double>();
-		if (vm.count("num_hidden_layers"))num_hidden_layers = vm["num_hidden_layers"].as<uint16_t>();
-		if (vm.count("hidden_dim"))hidden_dim = vm["hidden_dim"].as<uint64_t>();
-		if (vm.count("hidden_activation"))hidden_activation = vm["hidden_activation"].as<std::string>();
-		if (vm.count("output_activation"))output_activation = vm["output_activation"].as<std::string>();
-		if (vm.count("model_file"))model_file = vm["model_file"].as<std::string>();
+        if (vm.count("help"))
+        {
+            std::cout << desc << std::endl;
+            return 0;
+        }
+        if (vm.count("mode"))mode = vm["mode"].as<std::string>();
+        if (vm.count("optimizer"))optimizer = vm["optimizer"].as<std::string>();
+        if (vm.count("cost_function"))cost_function = vm["cost_function"].as<std::string>();
+        if (vm.count("learning_rate"))learning_rate = vm["learning_rate"].as<double>();
+        if (vm.count("batch_size"))batch_size = vm["batch_size"].as<uint32_t>();
+        if (vm.count("num_epochs"))num_epochs = vm["num_epochs"].as<uint32_t>();
+        if (vm.count("lambda"))lambda = vm["lambda"].as<double>();
+        if (vm.count("reg"))reg = vm["reg"].as<std::string>();
+        if (vm.count("beta"))beta = vm["beta"].as<double>();
+        if (vm.count("dataset"))dataset = vm["dataset"].as<std::string>();
+        if (vm.count("header"))header = vm["header"].as<bool>();
+        if (vm.count("feature_dim"))feature_dim = vm["feature_dim"].as<uint64_t>();
+        if (vm.count("label_dim"))label_dim = vm["label_dim"].as<uint64_t>();
+        if (vm.count("test_size"))test_size = vm["test_size"].as<double>();
+        if (vm.count("num_hidden_layers"))num_hidden_layers = vm["num_hidden_layers"].as<uint16_t>();
+        if (vm.count("hidden_dim"))hidden_dim = vm["hidden_dim"].as<uint64_t>();
+        if (vm.count("hidden_activation"))hidden_activation = vm["hidden_activation"].as<std::string>();
+        if (vm.count("output_activation"))output_activation = vm["output_activation"].as<std::string>();
+        if (vm.count("model_file"))model_file = vm["model_file"].as<std::string>();
 
-	}
-	catch(std::exception& e)
-	{
-		std::cerr << "error: " << e.what() << std::endl;
-		exit(EXIT_FAILURE);
-	}
+    }
+    catch(std::exception& e)
+    {
+        std::cerr << "error: " << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
-	if(vm["mode"].as<std::string>() == "train")
-	{
-	    std::set<std::string> optimizers{"sgd", "adagrad", "rmsprop"};
-	    std::set<std::string> cost_functions{"mse", "mae", "crossentropy"};
-	    if (optimizers.count(optimizer) == 0)
+    if(vm["mode"].as<std::string>() == "train")
+    {
+        std::set<std::string> optimizers{"sgd", "adagrad", "rmsprop"};
+        std::set<std::string> cost_functions{"mse", "mae", "crossentropy"};
+        if (optimizers.count(optimizer) == 0)
         {
             std::cerr << "optimizer error: sgd, adagrad, rmsprop" << std::endl;
             exit(EXIT_FAILURE);
@@ -250,7 +250,7 @@ int main(int argc, char** argv)
                 model_file
                 );
     }
-	else if(vm["mode"].as<std::string>() == "test")
+    else if(vm["mode"].as<std::string>() == "test")
     {
         std::cout << "-----T e s t   C o n f i g u r a t i o n-----" << std::endl << std::endl;
         std::cout << "program usage mode: " << vm["mode"].as<std::string>() << std::endl;
@@ -262,7 +262,7 @@ int main(int argc, char** argv)
 
         testModel(mode, cost_function, dataset, header, feature_dim, label_dim, model_file);
     }
-	else
+    else
     {
         std::cerr << "error: program mode not set/wrong mode" << std::endl;
         exit(EXIT_FAILURE);

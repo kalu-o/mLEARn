@@ -183,7 +183,7 @@ class MNISTReader: public DataReader<T>
         /**
             Overloaded assignment operator.
 
-			@param argv Reference to the second operand
+            @param argv Reference to the second operand
             @return Reference to self
         */
         MNISTReader<T>& operator=(const MNISTReader<T>& argv);

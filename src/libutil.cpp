@@ -37,7 +37,7 @@ Node<T> Node<T>::operator+(const Node<T>& argv)
 {
     if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal!");
     mublas::vector<T> out = getData() + argv.getData();
-	return out;
+    return out;
 }
 
 template <class T>
@@ -45,7 +45,7 @@ Node<T> Node<T>::operator-(const Node<T>& argv)
 {
     if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal!");
     mublas::vector<T> out = getData() - argv.getData();
-	return out;
+    return out;
 }
 
 template <class T>
@@ -53,7 +53,7 @@ Node<T> Node<T>::operator*(const Node<T>& argv)
 {
     if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal!");
     mublas::vector<T> out = element_prod(getData(), argv.getData());
-	return out;
+    return out;
 }
 
 template <class T>
@@ -71,7 +71,7 @@ template <class T>
 Node<T> Node<T>::scalarMultiply(double rate)
 {
     mublas::vector<T> out = getData() * rate;
-	return out;
+    return out;
 }
 
 template <class T>
@@ -119,12 +119,12 @@ template <class T>
 NetNode<T>& NetNode<T>::sigmoid()
 {
 
-	for(uint64_t i = 0; i < this->data_size; ++i)
+    for(uint64_t i = 0; i < this->data_size; ++i)
     {
         this->data[i] = 1.0 / (1.0 + exp(-this->data[i]));
     }
 
-	return *this;
+    return *this;
 }
 
 template <class T>
@@ -132,75 +132,75 @@ NetNode<T> NetNode<T>::sigmoidPrime()
 {
 
     NetNode<T> temp = *this, out = (temp * temp);
-	return temp - out;
+    return temp - out;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::hyperTan()
 {
-	for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = tanh(this->data[i]);
-	return *this;
+    for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = tanh(this->data[i]);
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::hyperTanPrime()
 {
     for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = (1 - this->data[i] * this->data[i]);
-	return *this;
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::ReLU()
 {
-	for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = std::max(0.0, this->data[i]);
-	return *this;
+    for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = std::max(0.0, this->data[i]);
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::ReLUPrime(double alpha)
 {
     for(uint64_t i = 0; i < this->data_size; ++i)this->data[i] = this->data[i] < 0.0 ? alpha : 1.0;
-	return *this;
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::ELU(double alpha)
 {
-	for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = this->data[i] > 0 ? this->data[i] : alpha * (exp(this->data[i]) - 1);
-	return *this;
+    for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = this->data[i] > 0 ? this->data[i] : alpha * (exp(this->data[i]) - 1);
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::ELUPrime(double alpha)
 {
     for(uint64_t i = 0; i < this->data_size; ++i)this->data[i] = this->data[i] > 0.0 ? 1.0 : alpha * exp(this->data[i]);
-	return *this;
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::identity()
 {
-	return *this;
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::identityPrime()
 {
-	for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = 1.0;
-	return *this;
+    for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = 1.0;
+    return *this;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::softmax()
 {
     double t_sum = 0.0, max_e = *max_element(this->data.begin(), this->data.end());
-	for(uint64_t i = 0; i < this->data_size; ++i)
+    for(uint64_t i = 0; i < this->data_size; ++i)
     {
         this->data[i] = exp(this->data[i] -= max_e);
         t_sum += this->data[i];
     }
     for(uint64_t i = 0; i < this->data_size; ++i)this->data[i] = this->data[i]/t_sum;
-	return *this;
+    return *this;
 }
 
 template <class T>
@@ -214,14 +214,14 @@ mublas::matrix<T>& NetNode<T>::softmaxPrime(mublas::matrix<T>& argv)
             else argv(i, j) = -this->data[i] * this->data[j];
         }
 
-	return argv;
+    return argv;
 }
 
 template <class T>
 NetNode<T>& NetNode<T>::log_e()
 {
-	for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = log(this->data[i]);
-	return *this;
+    for(uint64_t i = 0; i < this->data_size; ++i) this->data[i] = log(this->data[i]);
+    return *this;
 }
 
 template <class T>
@@ -243,18 +243,18 @@ Node<T>& Node<T>::generateRandomData(uint64_t input_dim, uint64_t output_dim)
 template <class T>
 NetNode<T>& Activation<T>::compute(NetNode<T>& input)
 {
-	if (type == "sigmoid") input = input.sigmoid();
-	else if (type == "tanh")input= input.hyperTan();
-	else if (type == "relu")input = input.ReLU();
-	else if (type == "softmax")input = input.softmax();
-	else if (type == "elu")input = input.ELU(alpha);
-	else if (type == "identity")input = input.identity();
-	else
+    if (type == "sigmoid") input = input.sigmoid();
+    else if (type == "tanh")input= input.hyperTan();
+    else if (type == "relu")input = input.ReLU();
+    else if (type == "softmax")input = input.softmax();
+    else if (type == "elu")input = input.ELU(alpha);
+    else if (type == "identity")input = input.identity();
+    else
     {
         std::cerr << "Unknown activation function!" << std::endl;
         exit(EXIT_FAILURE);
     }
-	return input;
+    return input;
 }
 
 template <class T>
@@ -265,14 +265,14 @@ NetNode<T>& Activation<T>::computeDerivative(NetNode<T>& input)
     else if (type == "relu")input = input.ReLUPrime(alpha);
     else if (type == "elu")input = input.ELUPrime(alpha);
     else if (type == "identity")input = input.identityPrime();
-	return input;
+    return input;
 }
 
 template <class T>
 mublas::matrix<T>& Activation<T>::computeDerivative(NetNode<T>& input, mublas::matrix<T>& jacobian_m)
 {
     if (type == "softmax") jacobian_m = input.softmaxPrime(jacobian_m);
-	return jacobian_m;
+    return jacobian_m;
 }
 
 template <class T>

@@ -113,8 +113,8 @@ class Node
         /**
             Accessor for the Node "data" member.
 
-			@pre None
-			@post Does not change the object
+            @pre None
+            @post Does not change the object
             @return data A vector of type T
         */
         const mublas::vector<T>& getData()const{return data;}
@@ -135,36 +135,36 @@ class Node
         /**
             Accessor for the Node "data_size" member.
 
-			@pre None
-			@post Does not change the object.
+            @pre None
+            @post Does not change the object.
             @return data_size The size/dimension of "data"
         */
         uint64_t getDataSize()const{return data_size;}
         /**
             Overloaded addition operator.
 
-			@param argv A reference to the second operand.
+            @param argv A reference to the second operand.
             @return A new Node object.
         */
         Node<T> operator+(const Node<T>& argv);
         /**
             Overloaded subtraction operator.
 
-			@param argv A reference to the second operand
+            @param argv A reference to the second operand
             @return A new Node object
         */
         Node<T> operator-(const Node<T>& argv);
         /**
             Overloaded multiplication operator.
 
-			@param argv A reference to the second operand
+            @param argv A reference to the second operand
             @return A new Node object
         */
         Node<T> operator*(const Node<T>& argv);
         /**
             Overloaded assignment operator.
 
-			@param argv A reference to the second operand
+            @param argv A reference to the second operand
             @return A reference to self.
         */
         Node<T>& operator=(const Node<T>& argv);
@@ -246,7 +246,7 @@ class NetNode : public Node<T>
             Computes the sigmoid (activation) of values of "data".
 
             @pre None
-			@post Modifies "data" values.
+            @post Modifies "data" values.
             @return A reference to self (with sigmoid of "data" values)
         */
         NetNode<T>& sigmoid();
@@ -261,7 +261,7 @@ class NetNode : public Node<T>
             Computes the tanh (activation) of values of "data".
 
             @pre None
-			@post Modifies "data" values.
+            @post Modifies "data" values.
             @return A reference to self (with tanh of "data" values)
         */
         NetNode<T>& hyperTan();
@@ -276,7 +276,7 @@ class NetNode : public Node<T>
             Computes the Rectified linear Unit (ReLU) activation: max(0, x).
 
             @pre None
-			@post Modifies "data" values.
+            @post Modifies "data" values.
             @return A reference to self (with ReLU of "data" values)
         */
         NetNode<T>& ReLU();
@@ -292,7 +292,7 @@ class NetNode : public Node<T>
             Computes softmax activation function; forces sum of probabilities to 1.
 
             @pre None
-			@post Modifies "data" values.
+            @post Modifies "data" values.
             @return A reference to self (with softmax of "data" values)
         */
         NetNode<T>& softmax();
