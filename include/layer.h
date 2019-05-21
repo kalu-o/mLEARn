@@ -136,7 +136,7 @@ class Layer
              delta_w(output_dim, input_dim, 0),
              regularize_w(output_dim, input_dim, 0),
              momentum_w(output_dim, input_dim, 0),
-             sq_delta_w(output_dim, input_dim, 0.2),
+             sq_delta_w(output_dim, input_dim, 0.1),
              type{type},
              act_function{act_function}
         {initialize(); }
