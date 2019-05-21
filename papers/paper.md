@@ -14,7 +14,6 @@ affiliations:
  - name: Member, Institute of Electrical and Electronics Engineers
    index: 1
 date: 21 May 2019
-nocite: @LeCun:1999, @Kiefer:1952, @Bishop:1995
 bibliography: ref.bib
 ---
 
@@ -25,7 +24,7 @@ in C++. The techniques and algorithms implemented represent existing approaches 
 machine learning. ``mLEARn`` is written using simple C++ constructs. The aim of ``mLEARn``
 is to provide a simple and extendable machine learning platform for students in courses
 involving C++ and machine learning. An experiment showed comparable results 
-in terms of accuracy on the MNIST digit recognition task. The source code and documentation can
+in terms of accuracy on the MNIST digit recognition task [@ @LeCun:1999]. The source code and documentation can
 be downloaded from https://github.com/kalu-o/mLEARn.
 
 The classes implemented in ``mLEARn`` are Node, NetNode, Activation, CostFunction, Layer,
