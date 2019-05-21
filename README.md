@@ -13,11 +13,11 @@ An Implementation of Mutli-layer Perceptron in C++.
 5. [Contibuting and Bug Reporting](#5-contibuting-and-bug-reporting)
 ## 1. Features
 ### general
-* Single-threaded, CPU only
-* Reasonably fast
-* Simple C++ constructs
+* single-threaded, CPU only
+* reasonably fast
+* simple C++ constructs
 * Linux platform currently supported
-* Feed-forward networks
+* feed-forward networks
 
 ### activation functions
 * tanh
@@ -37,10 +37,11 @@ An Implementation of Mutli-layer Perceptron in C++.
 * mini-batch stochastic gradient descent (SGD)
 * adagrad
 * rmsprop
+* psdsquare (will be added soon)
 
 ### miscellenous
 * L1/L2 regularization
-* Momentum
+* momentum
 
 ## 2. Building from Source
 ### dependencies
@@ -107,7 +108,7 @@ label_dim: 2
 ```bash
 bin/mlearn -m train -o sgd -c mse -d data/oilTrn.dat  -D 10 -A sigmoid -n 30  -f oil_model.bin -F 12 -L 2
 ```
-Deafault parameters are used for any missing option. Adding regularization and momentum to the model:
+Default parameters are used for any missing option. Adding regularization and momentum to the model:
 ```
 reg: L2
 lambda: 0.05
