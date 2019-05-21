@@ -28,7 +28,7 @@ involving C++ and machine learning. An experiment showed comparable results
 in terms of accuracy on the MNIST digit recognition task. The source code and documentation can
 be downloaded from https://github.com/kalu-o/mLEARn.
 
-The classes implemented in mLEARn are Node, NetNode, Activation, CostFunction, Layer,
+The classes implemented in ``mLEARn`` are Node, NetNode, Activation, CostFunction, Layer,
 Network, DataReader and Optimizer. The Node class is the fundamental data structure
 used; and NetNode is an extension of the Node class used for multi-layer perceptron. 
 The Activation class handles activations in the network. Currently, the functions implemented
@@ -40,7 +40,7 @@ The Network class is a classic MLP consisting of sequences of layers, i.e. one o
 hidden layers and an output layer. The DataReader class is the base class responsible for
 reading train/test dataset into features and labels. Three different readers are implemented,
 namely, MNISTReader, GenericReader and IrisReader. The Optimizer class is the base class responsible
-for training algorithms. Three optimizers are currently implemented, namely mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012]. A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE.
+for training algorithms. Three optimizers are currently implemented, namely mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012]. A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE. A number of new enhancements such as automatic differenciation, distributed computing and GPU support will be added in future.
 
 # Acknowledgements
 
