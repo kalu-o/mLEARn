@@ -1,58 +1,58 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'mLEARn: An Implementation of Multi-layer Perceptron in C++'
 tags:
-  - Python
-  - astronomy
-  - dynamics
-  - galactic dynamics
-  - milky way
+  - neural networks
+  - multi-layer perceptron
+  - deep learning
+  - stochastic gradient descent
+  - C++
 authors:
-  - name: Adrian M. Price-Whelan
-    orcid: 0000-0003-0872-7098
+  - name: Kalu U. Ogbureke
+    orcid: 0000-0002-8152-4863
     affiliation: 1
 affiliations:
- - name: Lyman Spitzer, Jr. Fellow, Princeton University
+ - name: Member, Institute of Electrical and Electronics Engineers
    index: 1
-date: 13 August 2017
-bibliography: paper.bib
+date: 21 May 2019
+bibliography: ref.bib
 ---
 
 # Summary
 
-The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+This paper presents ``mLEARn``, an open-source implementation of multi-layer perceptron
+in C++. The techniques and algorithms implemented represent existing approaches in
+machine learning. ``mLEARn`` is written using simple C++ constructs. The aim of ``mLEARn``
+is to provide a simple and extendable machine learning platform for students in courses
+involving C++ and machine learning. An experiment showed comparable results 
+in terms of accuracy on the MNIST digit recognition task. The source code and documentation can
+be downloaded from https://github.com/kalu-o/mLEARn.
 
-``Gala`` is an Astropy-affiliated Python package for galactic dynamics. Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for ``Gala`` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. ``Gala`` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the ``Astropy`` package [@astropy] (``astropy.units`` and
-``astropy.coordinates``).
+Artificial neural networks (ANNs) is an area of deep learning which has been well studied.
+This is because of their importance in many areas, from autonomous driving through speech
+technologies [@Graves:2013]. The two main categories are usually recurrent (feedback)
+and feed-forward architectures [@Bishop:1995].
 
-``Gala`` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in ``Gala`` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike. The source code for ``Gala`` has been
-archived to Zenodo with the linked DOI: [@zenodo]
+The classes implemented in mLEARn are Node, NetNode, Activation, CostFunction, Layer,
+Network, DataReader and Optimizer. The Node class is the fundamental data structure
+used; and NetNode is an extension of the Node class used for multi-layer perceptron. 
+The Activation class handles activations in the network. Currently, the functions implemented
+are sigmoid, tanh, rectified linear unit (ReLU), leaky ReLU, identity, softmax
+and exponential linear unit (ELU). The CostFunction class is responsible for objective/loss
+functions. Cost functions implemented are mean squared error (MSE), mean absolute
+error (MAE) and cross entropy.
+The Network class is a classic MLP consisting of sequences of layers, i.e. one or more
+hidden layers and an output layer. The DataReader class is the base class responsible for
+reading train/test dataset into features and labels. Three different readers are implemented,
+namely, MNISTReader, GenericReader and IrisReader. The Optimizer class is the base class responsible
+for training algorithms. Three optimizers are currently implemented, namely, mini-batch stochastic gradient descent [@Kiefer:1952, Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012]. A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE.
+
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+The core work in neural networks and convergence was
+done as part of DEA thesis while the author was with GRLMC
+at Rovira i Virgili University, Tarragona. The author would
+like to acknowledge support for the speech and language
+technologies program.
 
 # References
