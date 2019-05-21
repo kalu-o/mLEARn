@@ -4,7 +4,9 @@ src="images/logo.png" style="background-color:rgba(0,0,0,0);" height=230 alt="mL
 </h2>
 
 # mLEARn
-An Implementation of Mutli-layer Perceptron in C++. 
+An Implementation of Mutli-layer Perceptron in C++. The aim of mLEARn
+is to provide a simple and extendable machine learning platform for students in courses
+involving C++ and machine learning.
 ## Table of Contents
 1. [Features](#1-features)
 2. [Building from Source](#2-building-from-source)
