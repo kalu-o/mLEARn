@@ -35,7 +35,7 @@ and feed-forward architectures [@Bishop:1995]. Deep learning is currently an act
 
 # Statement of Need
 
-There are currently available popular deep learning frameworks such as MXNet [@mxnet], Caffe [@caffe] and TensorFlow [@tensorflow]. Students often used these as off-the-shelf machine learning tools and have little or no control over the codes. One of the reasons for 
+There are currently available popular deep learning frameworks such as MXNet [@mxnet], Caffe [@caffe] and TensorFlow [@tensorflow]. Students often use these as off-the-shelf machine learning tools and have little or no control over the codes. One of the reasons for 
 this is because the codes are advanced and production ready. ``mLEARn`` addresses these as it can be used as an off-the-shelf machine learning tool. Furthermore, the coding style makes it easier to apply what was learnt in machine learning/C++ courses and extend the functionalities. These make it easier to understand machine learning algorithms from first principle and extend state-of-the-art.
 
 # Architecture of mLEARn
@@ -51,7 +51,7 @@ The Network class is a classic MLP consisting of sequences of layers, i.e. one o
 hidden layers and an output layer. The DataReader class is the base class responsible for
 reading train/test dataset into features and labels. Three different readers are implemented,
 namely MNISTReader, GenericReader and IrisReader. The Optimizer class is the base class responsible
-for training algorithms. Three optimizers are currently implemented, namely mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012].
+for training algorithms. Three optimizers are currently implemented: mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012].
 
 ![](reader.PNG)      ![](optimizer.PNG)
 
