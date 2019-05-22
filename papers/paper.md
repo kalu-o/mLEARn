@@ -53,7 +53,7 @@ reading train/test dataset into features and labels. Three different readers are
 namely MNISTReader, GenericReader and IrisReader. The Optimizer class is the base class responsible
 for training algorithms. Three optimizers are currently implemented: mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012].
 
-![](reader.PNG)      ![](optimizer.PNG)
+![](reader.PNG) ![](optimizer.PNG)
 
 A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE. 
 A number of new enhancements such as automatic differentiation, distributed computing and GPU support will be added in future.
