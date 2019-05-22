@@ -45,7 +45,7 @@ The classes implemented in ``mLEARn`` are Node, NetNode, Activation, CostFunctio
 Network, DataReader and Optimizer. The Node class is the fundamental data structure
 used; and NetNode is an extension of the Node class used for multi-layer perceptron. 
 
-![](node.PNG)
+![](node.PNG)  
 
 The Activation class handles activations in the network. Currently, the functions implemented
 are sigmoid, tanh, rectified linear unit (ReLU), leaky ReLU, identity, softmax
