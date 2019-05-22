@@ -35,29 +35,27 @@ and feed-forward architectures [@Bishop:1995]. Deep learning is currently an act
 
 # Statement of Need
 
-There are currently available popular deep learning frameworks such as MXNet, Caffe and TensorFlow. Students
-often used these as off-the-shelf machine learning tools and have little or no control over the codes. One of the reasons for 
+There are currently available popular deep learning frameworks such as MXNet [@mxnet], Caffe [@caffe] and TensorFlow [@tensorflow]. Students often used these as off-the-shelf machine learning tools and have little or no control over the codes. One of the reasons for 
 this is because the codes are advanced and production ready. ``mLEARn`` addresses these as it can be used as an off-the-shelf machine learning tool. Furthermore, the coding style makes it easier to apply what was learnt in machine learning/C++ courses and extend the functionalities. These make it easier to understand machine learning algorithms from first principle and extend state-of-the-art.
 
 # Architecture of mLEARn
 
 The classes implemented in ``mLEARn`` are Node, NetNode, Activation, CostFunction, Layer,
 Network, DataReader and Optimizer. The Node class is the fundamental data structure
-used; and NetNode is an extension of the Node class used for multi-layer perceptron. 
+used; and NetNode is an extension of the Node class used for multi-layer perceptron. The Activation class handles activations in the network. Currently, the functions implemented are sigmoid, tanh, rectified linear unit (ReLU), leaky ReLU, identity, softmax
+and exponential linear unit (ELU). The CostFunction class is responsible for objective/loss functions. Cost functions implemented are mean squared error (MSE), mean absolute error (MAE) and cross entropy.
 
-![](node.PNG)  
+![](node.PNG)     ![](cost_function.PNG)      
 
-The Activation class handles activations in the network. Currently, the functions implemented
-are sigmoid, tanh, rectified linear unit (ReLU), leaky ReLU, identity, softmax
-and exponential linear unit (ELU). The CostFunction class is responsible for objective/loss
-functions. Cost functions implemented are mean squared error (MSE), mean absolute
-error (MAE) and cross entropy.
 The Network class is a classic MLP consisting of sequences of layers, i.e. one or more
 hidden layers and an output layer. The DataReader class is the base class responsible for
 reading train/test dataset into features and labels. Three different readers are implemented,
 namely MNISTReader, GenericReader and IrisReader. The Optimizer class is the base class responsible
-for training algorithms. Three optimizers are currently implemented, namely mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012]. A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE. An experiment showed comparable results in terms of accuracy on the MNIST digit recognition task [@LeCun:1999]
+for training algorithms. Three optimizers are currently implemented, namely mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012].
 
+![](reader.PNG)      ![](optimizer.PNG)
+
+A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE. 
 A number of new enhancements such as automatic differentiation, distributed computing and GPU support will be added in future.
 
 # Acknowledgements
