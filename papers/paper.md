@@ -11,9 +11,9 @@ authors:
     orcid: 0000-0002-8152-4863
     affiliation: 1
 affiliations:
- - name: Member, Institute of Electrical and Electronics Engineers
+ - name: GRLMC, Rovira i Virgili University, Tarragona Spain
    index: 1
-date: 21 May 2019
+date: 22 May 2019
 bibliography: ref.bib
 ---
 
