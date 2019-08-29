@@ -73,7 +73,7 @@ Network<T>& SGDHelper(
         train->shuffleIndex(indices);
         k = 0;
         train_loss = val_loss = train_accuracy = val_accuracy  = 0.0;
-        if (id == "adagrad" || id == "rmsprop") model.setUpdateRate(true);
+        if (id == "adagrad" || id == "rmsprop" || id == "psdsquare") model.setUpdateRate(true);
         for(uint64_t j = 0; j < indices.size(); ++j)
         {
             train_temp_x = *train_x[indices[j]];
@@ -224,9 +224,37 @@ double  RMSProp<T>::predict(Network<T>& model, const DataReader<T>* test, std::s
     double accuracy = SGD<T>::predict(model, test, model_file);
     return accuracy;
 }
+template <class T>
+Network<T>& PSDSquare<T>::train(
+                              Network<T>& model,
+                              std::string model_file,
+                              const DataReader<T>* train,
+                              const DataReader<T>* validation,
+                              std::string id)
+{
+    //this->lambda /= train->getRowDim();
+    SGDHelper(model, this->batch_size, this->num_epochs, this, train, validation, this->id);
+    model.saveModel(model_file);
+    return model;
+}
+template <class T>
+Network<T>&  PSDSquare<T>::update(Network<T>& model)
+{
+    bool change_rate = model.getUpdateRate();
+    model.updateNetwork(this->learning_rate, this->batch_size, this->lambda, this->reg, this->beta, change_rate, this->id);
+    model.setUpdateRate(false);
+    return model;
+}
+template <class T>
+double  PSDSquare<T>::predict(Network<T>& model, const DataReader<T>* test, std::string model_file)
+{
+    double accuracy = SGD<T>::predict(model, test, model_file);
+    return accuracy;
+}
 //template class Optimizer<double>;
 
 template class SGD<double>;
 template class Adagrad<double>;
 template class RMSProp<double>;
+template class PSDSquare<double>;
 } // namespace mlearn

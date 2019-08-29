@@ -199,11 +199,20 @@ Layer<T>& Layer<T>::updateParams(
     {
         sq_delta_w += element_prod(delta_w, delta_w);
     }
+    else if (id == "psdsquare" && change_rate)
+    {
+        mublas::vector<T> temp = output_delta.getData();
+        temp /= batch_size;
+        psdsquare = element_prod(temp, temp);
+        auto result = mublas::sum(psdsquare) + ADAGRAD_EPSILON;
+        for(uint64_t i = 0; i < psdsquare.size(); ++i)psdsquare[i] /= result;
+    }
     if(change_rate)
     {
         for(uint64_t i = 0; i < output_dim; ++i)
         {
-            for(uint64_t j = 0; j < input_dim; ++j) adagrad_rates(i, j) = rate * 1/(std::sqrt(sq_delta_w(i, j)) + ADAGRAD_EPSILON);
+            if(id == "psdsquare") for (uint64_t j = 0; j < input_dim; ++j) adagrad_rates(i, j) = psdsquare[i]; //std::max (psdsquare[i], rate);
+            else for (uint64_t j = 0; j < input_dim; ++j) adagrad_rates(i, j) = rate * 1/(std::sqrt(sq_delta_w(i, j)) + ADAGRAD_EPSILON);
         }
 
     }

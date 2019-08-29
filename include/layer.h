@@ -95,6 +95,7 @@ class Layer
         std::string type;
         /** Activation function of layer */
         Activation<T> act_function;
+        mublas::vector<T> psdsquare;
         /** Responsible for saving/serialization of members */
         friend class boost::serialization::access;
         template<class Archive>
@@ -118,6 +119,7 @@ class Layer
                 ar & sq_delta_w;
                 ar & type;
                 ar & act_function;
+                ar & psdsquare;
             }
         }
 
@@ -138,7 +140,8 @@ class Layer
              momentum_w(output_dim, input_dim, 0),
              sq_delta_w(output_dim, input_dim, 0.1),
              type{type},
-             act_function{act_function}
+             act_function{act_function},
+             psdsquare(output_dim)
         {initialize(); }
         /**
             Used to initialize weight in layers.

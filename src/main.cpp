@@ -189,11 +189,11 @@ int main(int argc, char** argv)
 
     if(vm["mode"].as<std::string>() == "train")
     {
-        std::set<std::string> optimizers{"sgd", "adagrad", "rmsprop"};
+        std::set<std::string> optimizers{"sgd", "adagrad", "rmsprop", "psdsquare"};
         std::set<std::string> cost_functions{"mse", "mae", "crossentropy"};
         if (optimizers.count(optimizer) == 0)
         {
-            std::cerr << "optimizer error: sgd, adagrad, rmsprop" << std::endl;
+            std::cerr << "optimizer error: sgd, adagrad, rmsprop, psdsquare" << std::endl;
             exit(EXIT_FAILURE);
         }
         if (cost_functions.count(cost_function) == 0)
@@ -325,6 +325,7 @@ int trainModel(
     if(optimizer == "sgd") opt = new SGD<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
     else if(optimizer == "adagrad") opt = new Adagrad<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
     else if(optimizer == "rmsprop") opt = new RMSProp<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
+    else if(optimizer == "psdsquare") opt = new PSDSquare<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
     else
     {
         std::cerr << "optimizer is not implemented" << std::endl;

@@ -222,6 +222,32 @@ class RMSProp : public SGD<T>
         /** Virtual destructor */
         virtual ~RMSProp(){}
 };
+template <class T>
+class PSDSquare : public SGD<T>
+{
+    private:
+        /** The id/type of optimizer */
+        std::string id{"psdsquare"};
+    public:
+        /** Default constructor */
+        PSDSquare(){}
+        /** Overloaded constructor with 6 arguments */
+        PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg,  double beta):
+            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
+        /** Overloaded constructor with 3 arguments */
+        PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD<T>(learning_rate, batch_size, n_epochs){}
+        /** Overloaded constructor with 5 arguments */
+        PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg):
+            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg){}
+        /** Implements train function */
+        Network<T>& train(Network<T>&, std::string, const DataReader<T>*, const DataReader<T>* = nullptr, std::string = "psdsquare");
+        /** Implements update function */
+        virtual Network<T>& update(Network<T>&);
+        /** Implements predict function */
+        double predict(Network<T>&, const DataReader<T>*, std::string);
+        /** Virtual destructor */
+        virtual ~PSDSquare(){}
+};
 } // namespace mlearn
 
 #endif
