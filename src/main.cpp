@@ -334,11 +334,35 @@ int trainModel(
 
     if (dataset == "mnist")
     {
-        train = new MNISTReader<double>("data/mnist_train.csv", ',',  false);
+        train = new MNIST_CIFARReader<double>("data/mnist_train.csv", 784, 10, ',', false);
         train->read();
         if(test_size > 0.0)
         {
-            validation = new MNISTReader<double>;
+            validation = new MNIST_CIFARReader<double>;
+            train->trainTestSplit(*validation, test_size);
+            opt->train(*model, model_file, train, validation);
+        }
+        else opt->train(*model, model_file, train);
+    }
+     else if (dataset == "emnist")
+    {
+        train = new MNIST_CIFARReader<double>("data/emnist-train-valid.csv", 784, 47, ',', false);
+        train->read();
+        if(test_size > 0.0)
+        {
+            validation = new MNIST_CIFARReader<double>;
+            train->trainTestSplit(*validation, test_size);
+            opt->train(*model, model_file, train, validation);
+        }
+        else opt->train(*model, model_file, train);
+    }
+      else if (dataset == "cifar10")
+    {
+        train = new MNIST_CIFARReader<double>("data/cifar-10-train.csv", 3072, 10, ',', false);
+        train->read();
+        if(test_size > 0.0)
+        {
+            validation = new MNIST_CIFARReader<double>;
             train->trainTestSplit(*validation, test_size);
             opt->train(*model, model_file, train, validation);
         }
@@ -394,7 +418,29 @@ int testModel(
     {
         try
         {
-            test = new MNISTReader<double>("data/mnist_test.csv", ',',  false);
+            test = new MNIST_CIFARReader<double>("data/mnist_test.csv", 784, 10, ',',  false);
+            test->read();
+        }catch (std::exception &e){
+            std::cerr << e.what() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+     else if (dataset == "emnist")
+    {
+        try
+        {
+            test = new MNIST_CIFARReader<double>("data/emnist-test.csv", 784, 47, ',',  false);
+            test->read();
+        }catch (std::exception &e){
+            std::cerr << e.what() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+     else if (dataset == "cifar10")
+    {
+        try
+        {
+            test = new MNIST_CIFARReader<double>("data/cifar-10-test.csv", 3072, 10, ',',  false);
             test->read();
         }catch (std::exception &e){
             std::cerr << e.what() << std::endl;

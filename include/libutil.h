@@ -42,7 +42,7 @@ Change Log: 01.04.2019 - Version 1.0.0
 #include <random>
 #define EPSILON 1e-2
 #define ADAGRAD_EPSILON 1e-8
-#define MAX_MNIST_VALUE 255
+#define MAX_MNIST_CIFAR_VALUE 255
 #define MAX_IRIS_VALUE 7.9
 
 /**

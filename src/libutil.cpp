@@ -35,7 +35,7 @@ namespace mlearn {
 template <class T>
 Node<T> Node<T>::operator+(const Node<T>& argv)
 {
-    if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal!");
+    if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal! (operator+)");
     mublas::vector<T> out = getData() + argv.getData();
     return out;
 }
@@ -43,7 +43,8 @@ Node<T> Node<T>::operator+(const Node<T>& argv)
 template <class T>
 Node<T> Node<T>::operator-(const Node<T>& argv)
 {
-    if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal!");
+    //std::cout<<data_size <<" " <<argv.data_size <<std::endl;
+    if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal! (operator-)");
     mublas::vector<T> out = getData() - argv.getData();
     return out;
 }
@@ -51,7 +52,7 @@ Node<T> Node<T>::operator-(const Node<T>& argv)
 template <class T>
 Node<T> Node<T>::operator*(const Node<T>& argv)
 {
-    if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal!");
+    if(data_size != argv.data_size) throw std::length_error("The data_size of the Nodes must be equal! (operator*)");
     mublas::vector<T> out = element_prod(getData(), argv.getData());
     return out;
 }

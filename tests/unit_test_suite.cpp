@@ -349,13 +349,13 @@ BOOST_AUTO_TEST_CASE(mnist_test)
 {
 
     std::cout << "Start Reader class test" << std::endl;
-    MNISTReader<double> mnist("data/mnist_sample.csv", ',',  false), train("data/mnist_train.csv", ',',  false), test, test2;
+    MNIST_CIFARReader<double> mnist("data/mnist_sample.csv", 784, 10, ',',  false), train("data/mnist_train.csv", 784, 10, ',',  false), test, test2;
     mnist.read();
     BOOST_CHECK(mnist.getFeatureDim() == 784);
     BOOST_CHECK(mnist.getLabelDim() == 10);
     BOOST_CHECK(mnist.getRowDim() == 10);
     //constructor
-    MNISTReader<double> mnist2(mnist);
+    MNIST_CIFARReader<double> mnist2(mnist);
     BOOST_CHECK(mnist.getFeatureDim() == mnist2.getFeatureDim());
     BOOST_CHECK(mnist.getLabelDim() == mnist2.getLabelDim() );
     BOOST_CHECK(mnist.getRowDim() == mnist2.getRowDim());

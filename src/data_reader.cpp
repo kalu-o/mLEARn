@@ -98,7 +98,7 @@ DataReader<T>& DataReader<T>::trainTestSplit(DataReader<T>& test, double test_si
 }
 
 template <class T>
-MNISTReader<T>::MNISTReader(const MNISTReader<T>& arg): DataReader<T>(arg.file_name, arg.sep, arg.header)
+MNIST_CIFARReader<T>::MNIST_CIFARReader(const MNIST_CIFARReader<T>& arg): DataReader<T>(arg.file_name, arg.sep, arg.header)
 {
     for (uint64_t i = 0; i < arg.row_dim; ++i)
     {
@@ -117,7 +117,7 @@ MNISTReader<T>::MNISTReader(const MNISTReader<T>& arg): DataReader<T>(arg.file_n
 }
 
 template <class T>
-MNISTReader<T>& MNISTReader<T>::operator=(const MNISTReader<T>& arg)
+MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::operator=(const MNIST_CIFARReader<T>& arg)
 {
     if(this == &arg) return *this;
     for (uint64_t i = 0; i < arg.row_dim; ++i)
@@ -132,7 +132,7 @@ MNISTReader<T>& MNISTReader<T>::operator=(const MNISTReader<T>& arg)
 }
 
 template <class T>
-MNISTReader<T>& MNISTReader<T>::read()
+MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::read()
 {
     std::cout << "Reading data starts..." << std::endl;
     std::string csv_line;
@@ -156,7 +156,8 @@ MNISTReader<T>& MNISTReader<T>::read()
             }
             else
             {
-                feat[i - 1] = atof(csv_element.c_str())/MAX_MNIST_VALUE;
+                feat[i - 1] = atof(csv_element.c_str())/MAX_MNIST_CIFAR_VALUE;
+                //feat[i - 1] = atof(csv_element.c_str());
             }
             ++i;
         }
@@ -269,7 +270,7 @@ IrisReader<T>& IrisReader<T>::read()
     return *this;
 }
 template class DataReader<double>;
-template class MNISTReader<double>;
+template class MNIST_CIFARReader<double>;
 template class GenericReader<double>;
 } // namespace mlearn
 

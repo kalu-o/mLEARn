@@ -39,7 +39,7 @@ template <class T>
 /**
     The DataReader class is the base class responsible for
     reading train/test dataset into features/labels. 3 different
-    readers are implemented, namely, MNISTReader, GenericReader
+    readers are implemented, namely, MNIST_CIFARReader, GenericReader
     and IrisReader. They extend the base class DataReader.
 */
 class DataReader
@@ -142,59 +142,59 @@ class DataReader
 
 template <class T>
 /**
-    The MNISTReader class extends the DataReader class.
-    It is responsible for reading the MNIST dataset into feature/label.
-    The MNIST database of handwritten digits  by Yann Lecun, Corinna Cortes
+    The MNIST_CIFARReader class extends the DataReader class.
+    It is responsible for reading the MNIST_CIFAR dataset into feature/label.
+    The MNIST_CIFAR database of handwritten digits  by Yann Lecun, Corinna Cortes
     http://yann.lecun.com/exdb/mnist/. https://pjreddie.com/projects/mnist-in-csv/.
     \n
     @code
-        //  Creates an MNISTReader object mnist and read a header-less file
+        //  Creates an MNIST_CIFARReader object mnist and read a header-less file
         //  "mnist_sample.csv". Entries are delimited by a comma
-        MNISTReader<double> mnist("data/mnist_sample.csv", ',',  false);
+        MNIST_CIFARReader<double> mnist("data/mnist_sample.csv", ',',  false);
         //  Calls the read method
         mnist.read();
         //  Creates a vector of integers and shuffles it.
         std::vector<int> indices;
         mnist.shuffleIndex(indices);
-        //  Creates an MNISTReader object test
-        MNISTReader<double> test
+        //  Creates an MNIST_CIFARReader object test
+        MNIST_CIFARReader<double> test
         //  Splits "mnist" into train/validation set
         //  10% of the original data is copied to test
         mnist.trainTestSplit(test, 0.1);
     @endcode
 */
-class MNISTReader: public DataReader<T>
+class MNIST_CIFARReader: public DataReader<T>
 {
     public:
         /** Default constructor */
-        MNISTReader(): DataReader<T>(){}
+        MNIST_CIFARReader(): DataReader<T>(){}
         /** Overloaded constructor with 3 arguments. The
             number of features is 784(28 * 28) and the
             label dimension is 10 ("one_hot" set to true).
         */
-        MNISTReader(const std::string file_name, char sep, bool header): DataReader<T>(file_name, 784, 10, sep, header){}
+        MNIST_CIFARReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, char sep, bool header): DataReader<T>(file_name, feature_dim, label_dim, sep, header){}
         /** Overloaded constructor with 2 arguments */
-        MNISTReader(const std::string file_name, bool one_hot): DataReader<T>(file_name, 784, 10, one_hot){}
+        MNIST_CIFARReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, bool one_hot): DataReader<T>(file_name, feature_dim, label_dim, one_hot){}
         /** Copy constructor.
 
-            @param argv MNISTReader object to be copied.
+            @param argv MNIST_CIFARReader object to be copied.
         */
-        MNISTReader(const MNISTReader<T>& argv);
+        MNIST_CIFARReader(const MNIST_CIFARReader<T>& argv);
         /**
             Overloaded assignment operator.
 
             @param argv Reference to the second operand
             @return Reference to self
         */
-        MNISTReader<T>& operator=(const MNISTReader<T>& argv);
+        MNIST_CIFARReader<T>& operator=(const MNIST_CIFARReader<T>& argv);
         /**
             Reads a text file containing features and labels.
 
             @return Reference to self.
         */
-        MNISTReader<T>& read();
+        MNIST_CIFARReader<T>& read();
         /** Virtual destructor */
-        virtual ~MNISTReader(){}
+        virtual ~MNIST_CIFARReader(){}
 };
 
 template <class T>
