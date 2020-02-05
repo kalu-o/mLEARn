@@ -165,9 +165,11 @@ Layer<T>& Layer<T>::updateParams(
                     std::string reg,
                     double beta)
 {
-    rate/=batch_size;
+    //rate/=batch_size;
+    delta_w /= batch_size;
+
     if(reg != "None") regularize(rate, lambda, reg);
-    NetNode<T> out = delta_b.scalarMultiply(rate);
+    NetNode<T> out = delta_b.scalarMultiply(rate/batch_size);
     bias = bias - out;
     if (reg != "None" && beta > 0.0) weight = weight - (delta_w * rate) - regularize_w - momentum_w * beta;
     else if (reg == "None" && beta > 0.0) weight = weight - (delta_w * rate) - momentum_w * beta;
@@ -187,19 +189,21 @@ Layer<T>& Layer<T>::updateParams(
                     std::string id)
 {
     delta_w /= batch_size;
+    //delta_b /= batch_size;
     mublas::matrix<T> adagrad_rates(output_dim, input_dim, rate);
-    NetNode<T> out = delta_b.scalarMultiply(rate);
+    NetNode<T> out = delta_b.scalarMultiply(rate/batch_size);
     bias = bias - out;
     double mu = 0.9;
     if (id == "rmsprop" && change_rate)
     {
-        sq_delta_w = mu * sq_delta_w + (1 - mu) * element_prod(delta_w, delta_w);
+        sq_delta_w *= mu;
+        sq_delta_w += (1.0 - mu) * element_prod(delta_w, delta_w);
     }
     else if (id == "adagrad" && change_rate)
     {
         sq_delta_w += element_prod(delta_w, delta_w);
     }
-    else if (id == "psdsquare" && change_rate)
+ /*   else if (id == "psdsquare" && change_rate)
     {
         mublas::vector<T> temp = output_delta.getData();
         temp /= batch_size;
@@ -214,7 +218,24 @@ Layer<T>& Layer<T>::updateParams(
             if(id == "psdsquare") for (uint64_t j = 0; j < input_dim; ++j) adagrad_rates(i, j) = psdsquare[i]; //std::max (psdsquare[i], rate);
             else for (uint64_t j = 0; j < input_dim; ++j) adagrad_rates(i, j) = rate * 1/(std::sqrt(sq_delta_w(i, j)) + ADAGRAD_EPSILON);
         }
-
+    }
+    */
+      else if (id == "psdsquare" && change_rate)
+    {
+        sq_delta_w = element_prod(delta_w, delta_w);
+        double total_sum = 0.0;
+        for (uint64_t i = 0; i < sq_delta_w.size1(); ++ i)
+            for (uint64_t j = 0; j < sq_delta_w.size2(); ++ j)
+                total_sum += sq_delta_w(i, j);
+        adagrad_rates = sq_delta_w / (total_sum + ADAGRAD_EPSILON);
+    }
+    if(change_rate)
+    {
+        for(uint64_t i = 0; i < output_dim; ++i)
+        {
+            if(id == "psdsquare") ; //std::max (psdsquare[i], rate);
+            else for (uint64_t j = 0; j < input_dim; ++j) adagrad_rates(i, j) = rate * 1/(std::sqrt(sq_delta_w(i, j)) + ADAGRAD_EPSILON);
+        }
     }
     if(reg != "None") regularize(adagrad_rates, lambda, reg);
     if (reg != "None" && beta > 0.0) weight = weight - element_prod(delta_w, adagrad_rates) - regularize_w -  momentum_w * beta;  // momentum_w * beta * rate;
