@@ -134,7 +134,7 @@ And the following is used to test the model "oil_model.bin" on data/oilTst.dat:
 ```
 ### example 2: classification
 This example illustrates solving a classification probplem with an MLP. The train and test datasets are "mnist_train.csv" and "mnist_test.csv" located in the data/ directory. These are the MNIST database of handwritten digits  by Yann Lecun, Corinna Cortes
- http://yann.lecun.com/exdb/mnist/. This version was obtained from https://pjreddie.com/projects/mnist-in-csv/. The train set contains 60000 samples and the test 10000. Each sample consists of 785 vlaues delimited by commas (feature and label dimensions are 784 and 1 respectively). The label was re-encoded into one-hot, making the label dimension 10. Also the features were normalized to be between 0 and 1. The following trains a model with the following parameters:
+ http://yann.lecun.com/exdb/mnist/. This version was obtained from https://pjreddie.com/projects/mnist-in-csv/. The train set contains 60000 samples and the test 10000. Each sample consists of 785 values delimited by commas (feature and label dimensions are 784 and 1 respectively). The label was re-encoded into one-hot, making the label dimension 10. Also the features were normalized to be between 0 and 1. The following trains a model with the following parameters:
 ```
 mode : train
 optimizer: adagrad
