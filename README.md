@@ -94,7 +94,7 @@ $ bin/mlearn --help
 ```
 ![](images/mlearn_help.png)
 ### example 1: regression
-This example illustrates solving a regression probplem with an MLP. The train and test datasets are "oilTrn.dat" and "oilTst.dat" located in the data/ directory. These are slightly modified version of those included with Netlab (https://www2.aston.ac.uk/eas/research/groups/ncrg/resources/netlab/how-to-use). There are 500 samples in each of the dataset. Each sample consists of 14 vlaues delimited by commas (feature and label dimensions are 12 and 2 respectively). The following trains a model with the following parameters:
+This example illustrates solving a regression problem with an MLP. The train and test datasets are "oilTrn.dat" and "oilTst.dat" located in the data/ directory. These are slightly modified version of those included with Netlab (https://www2.aston.ac.uk/eas/research/groups/ncrg/resources/netlab/how-to-use). There are 500 samples in each of the dataset. Each sample consists of 14 vlaues delimited by commas (feature and label dimensions are 12 and 2 respectively). The following trains a model with the following parameters:
 ```
 mode : train
 optimizer: sgd
@@ -133,7 +133,7 @@ And the following is used to test the model "oil_model.bin" on data/oilTst.dat:
  bin/mlearn -m test  -d data/oilTst.dat  -f oil_model.bin -F 12 -L 2 -c mse
 ```
 ### example 2: classification
-This example illustrates solving a classification probplem with an MLP. The train and test datasets are "mnist_train.csv" and "mnist_test.csv" located in the data/ directory. These are the MNIST database of handwritten digits  by Yann Lecun, Corinna Cortes
+This example illustrates solving a classification problem with an MLP. The train and test datasets are "mnist_train.csv" and "mnist_test.csv" located in the data/ directory. These are the MNIST database of handwritten digits  by Yann Lecun, Corinna Cortes
  http://yann.lecun.com/exdb/mnist/. This version was obtained from https://pjreddie.com/projects/mnist-in-csv/. The train set contains 60000 samples and the test 10000. Each sample consists of 785 values delimited by commas (feature and label dimensions are 784 and 1 respectively). The label was re-encoded into one-hot, making the label dimension 10. Also the features were normalized to be between 0 and 1. The following trains a model with the following parameters:
 ```
 mode : train
