@@ -24,14 +24,13 @@ SOFTWARE.
 Authors: Kalu U. Ogbureke
 Change Log: 01.04.2019 - Version 1.0.0
 */
-#ifndef OPTIMIZER_H
-#define OPTIMIZER_H
+#ifndef OPTIMIZERS_H
+#define OPTIMIZERS_H
 #include <vector>
-#include "network.h"
-#include "data_reader.h"
+#include "networks.h"
+#include "data_readers.h"
 
 namespace mlearn {
-template <class T>
 /**
     The Optimizer class is the base class responsible for
     training algorithms. 3 optimizers are currently implemented,
@@ -52,12 +51,12 @@ class Optimizer
             @param id The type of optimizer
             @return A reference to the trained model
         */
-        virtual Network<T>& train(
-                Network<T>& model,
+        virtual Network& train(
+                Network& model,
                 std::string model_file,
-                const DataReader<T>* train,
-                const DataReader<T>* validation = nullptr,
-                std::string id = "sgd");
+                const DataReader* train,
+                const DataReader* validation = nullptr,
+                std::string id = "sgd") = 0;
 
         /**
             Virtual function. This is responsible for prediction/test.
@@ -67,18 +66,17 @@ class Optimizer
             @param model_file The name of file to save trained model
             @return A test metric (accuracy, mse, mae)
         */
-        virtual double predict(Network<T>& model, const DataReader<T>* test, std::string model_file);
+        virtual double predict(Network& model, const DataReader* test, std::string model_file) = 0;
         /**
             Virtual function. This is responsible for model update during training.
             .
             @param model The model object to update
             @return A reference to updated model
         */
-        virtual Network<T>& update(Network<T>& model);
+        virtual Network& update(Network& model) = 0;
         /** Virtual destructor */
         virtual ~Optimizer(){}
 };
-template <class T>
 /**
     The base optimizer function that implements vanilla SGD.
     Other optimizers call the SGDHelper function.
@@ -92,20 +90,19 @@ template <class T>
     @param id Type of optimizer
     @return A reference to the trained model
 */
-Network<T>& SGDHelper(
-        Network<T>& model,
+Network& SGDHelper(
+        Network& model,
         uint32_t batch_size,
         uint32_t num_epochs,
-        Optimizer<T>* opt,
-        const DataReader<T>* train,
-        const DataReader<T>* validation = nullptr,
+        Optimizer* opt,
+        const DataReader* train,
+        const DataReader* validation = nullptr,
         std::string id = "sgd");
-template <class T>
 /**
     The SGD class extends the Optimizer class. It implements
     the classical mini-batch stochastic gradient descent.
 */
-class SGD : public Optimizer<T>
+class SGD : public Optimizer
 {
     private:
         /** The id/type of optimizer */
@@ -136,16 +133,15 @@ class SGD : public Optimizer<T>
         SGD(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg):
              learning_rate{learning_rate}, batch_size{batch_size}, num_epochs{n_epochs}, lambda{lambda}, reg{reg}{}
         /** Implements train function */
-        Network<T>& train(Network<T>&, std::string, const DataReader<T>*, const DataReader<T>* = nullptr, std::string = "sgd");
+        Network& train(Network&, std::string, const DataReader*, const DataReader* = nullptr, std::string = "sgd");
         /** Implements update function */
-        Network<T>& update(Network<T>&);
+        Network& update(Network&);
         /** Implements predict function */
-        double predict(Network<T>&, const DataReader<T>*, std::string);
+        double predict(Network&, const DataReader*, std::string);
         /** Virtual destructor */
         virtual ~SGD(){}
 
 };
-template <class T>
 /**
     The Adagrad class extends the SGD class. It implements the
     adaptive rate SGD. The only difference as compared
@@ -159,7 +155,7 @@ template <class T>
 
 
 */
-class Adagrad : public SGD<T>
+class Adagrad : public SGD
 {
     private:
         /** The id/type of optimizer */
@@ -170,23 +166,21 @@ class Adagrad : public SGD<T>
         Adagrad(){}
         /** Overloaded constructor with 6 arguments */
         Adagrad(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg,  double beta):
-            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
+            SGD(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
         /** Overloaded constructor with 3 arguments */
-        Adagrad(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD<T>(learning_rate, batch_size, n_epochs){}
+        Adagrad(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD(learning_rate, batch_size, n_epochs){}
         /** Overloaded constructor with 5 arguments */
         Adagrad(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg):
-            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg){}
+            SGD(learning_rate, batch_size, n_epochs, lambda, reg){}
         /** Implement train function */
-        Network<T>& train(Network<T>&, std::string, const DataReader<T>*, const DataReader<T>* = nullptr, std::string = "adagrad");
+        Network& train(Network&, std::string, const DataReader*, const DataReader* = nullptr, std::string = "adagrad");
         /** Implement update function */
-        virtual Network<T>& update(Network<T>&);
+        virtual Network& update(Network&);
         /** Implement predict function */
-        double predict(Network<T>&, const DataReader<T>*, std::string);
+        double predict(Network&, const DataReader*, std::string);
         /** Virtual destructor */
         virtual ~Adagrad(){}
 };
-
-template <class T>
 /**
     The RMSProp class extends the SGD class. It implements
     the root means square SGD. The only difference as compared
@@ -197,7 +191,7 @@ template <class T>
     T Tieleman, and G E Hinton,
     Lecture 6.5 - rmsprop, COURSERA: Neural Networks for Machine Learning (2012)
 */
-class RMSProp : public SGD<T>
+class RMSProp : public SGD
 {
     private:
         /** The id/type of optimizer */
@@ -207,23 +201,22 @@ class RMSProp : public SGD<T>
         RMSProp(){}
         /** Overloaded constructor with 6 arguments */
         RMSProp(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg,  double beta):
-            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
+            SGD(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
         /** Overloaded constructor with 3 arguments */
-        RMSProp(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD<T>(learning_rate, batch_size, n_epochs){}
+        RMSProp(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD(learning_rate, batch_size, n_epochs){}
         /** Overloaded constructor with 5 arguments */
         RMSProp(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg):
-            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg){}
+            SGD(learning_rate, batch_size, n_epochs, lambda, reg){}
         /** Implements train function */
-        Network<T>& train(Network<T>&, std::string, const DataReader<T>*, const DataReader<T>* = nullptr, std::string = "rmsprop");
+        Network& train(Network&, std::string, const DataReader*, const DataReader* = nullptr, std::string = "rmsprop");
         /** Implements update function */
-        virtual Network<T>& update(Network<T>&);
+        virtual Network& update(Network&);
         /** Implements predict function */
-        double predict(Network<T>&, const DataReader<T>*, std::string);
+        double predict(Network&, const DataReader*, std::string);
         /** Virtual destructor */
         virtual ~RMSProp(){}
 };
-template <class T>
-class PSDSquare : public SGD<T>
+class PSDSquare : public SGD
 {
     private:
         /** The id/type of optimizer */
@@ -233,21 +226,22 @@ class PSDSquare : public SGD<T>
         PSDSquare(){}
         /** Overloaded constructor with 6 arguments */
         PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg,  double beta):
-            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
+            SGD(learning_rate, batch_size, n_epochs, lambda, reg, beta){}
         /** Overloaded constructor with 3 arguments */
-        PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD<T>(learning_rate, batch_size, n_epochs){}
+        PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs): SGD(learning_rate, batch_size, n_epochs){}
         /** Overloaded constructor with 5 arguments */
         PSDSquare(double learning_rate, uint32_t batch_size, uint32_t n_epochs, double lambda, std::string reg):
-            SGD<T>(learning_rate, batch_size, n_epochs, lambda, reg){}
+            SGD(learning_rate, batch_size, n_epochs, lambda, reg){}
         /** Implements train function */
-        Network<T>& train(Network<T>&, std::string, const DataReader<T>*, const DataReader<T>* = nullptr, std::string = "psdsquare");
+        Network& train(Network&, std::string, const DataReader*, const DataReader* = nullptr, std::string = "psdsquare");
         /** Implements update function */
-        virtual Network<T>& update(Network<T>&);
+        virtual Network& update(Network&);
         /** Implements predict function */
-        double predict(Network<T>&, const DataReader<T>*, std::string);
+        double predict(Network&, const DataReader*, std::string);
         /** Virtual destructor */
         virtual ~PSDSquare(){}
 };
+
 } // namespace mlearn
 
 #endif

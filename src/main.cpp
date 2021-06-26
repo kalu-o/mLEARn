@@ -27,8 +27,8 @@ Change Log: 01.04.2019 - Version 1.0.0
 #include <iostream>
 #include <cmath>
 #include <boost/program_options.hpp>
-#include "libutil.h"
-#include "optimizer.h"
+#include "utils.h"
+#include "optimizers.h"
 
 using namespace mlearn;
 namespace po = boost::program_options;
@@ -97,6 +97,7 @@ int testModel(
             uint64_t label_dim,
             std::string model_file
             );
+DataReader*  readData(DataReader*  corpus, std::string dataset, uint64_t feature_dim, uint64_t label_dim, bool header);
 /**
     The is the entry point of the program. It processes user
     command line options and implements the train or test functions.
@@ -294,51 +295,42 @@ int trainModel(
           )
 {
 
-    Activation<double> a_hidden(hidden_activation), a_output(output_activation);
-    Network<double>* model(nullptr);
-    Optimizer<double>* opt(nullptr);
-    Layer<double>* layer(nullptr);
-    DataReader<double>* train(nullptr);
-    DataReader<double>* validation(nullptr);
-
-    if(cost_function == "mse") model = new Network<double>(new MSE<double>);
-    else if(cost_function == "mae") model = new Network<double>(new MAE<double>);
-    else if(cost_function == "crossentropy") model =  new Network<double>(new CrossEntropy<double>);
-    if(num_hidden_layers > 0)
+    Network* model{nullptr};
+    Optimizer* opt{nullptr};
+    DataReader* train{nullptr};
+    DataReader* validation{nullptr};
+	train = readData(train, dataset, feature_dim, label_dim, header);
+	
+	if(cost_function == "mse") model = new Network(new MSE);
+    else if(cost_function == "mae") model = new Network(new MAE);
+    else if(cost_function == "crossentropy") model =  new Network(new CrossEntropy);
+	
+	if(num_hidden_layers > 0)
     {
-        layer = new Layer<double>(feature_dim, hidden_dim, "hidden", a_hidden);
-        model->addLayer(*layer);
-        if(layer)delete layer;
+		for(uint16_t i = 0; i < num_hidden_layers; ++i)
+		{
+			model->addLayer(new DenseLayer(feature_dim, hidden_dim));
+			model->addLayer(new ReLULayer(hidden_dim, hidden_dim));
+		}
+		
     }
-
-    for(uint16_t i = 1; i < num_hidden_layers; ++i)
-    {
-        layer = new Layer<double>(hidden_dim, hidden_dim, "hidden", a_hidden);
-        model->addLayer(*layer);
-        if(layer)delete layer;
-    }
-    if(num_hidden_layers > 0)layer = new Layer<double>(hidden_dim, label_dim, "output", a_output);
-    else layer = new Layer<double>(feature_dim, label_dim, "output", a_output);
-    model->addLayer(*layer);
-    if(layer)delete layer;
+	model->addLayer(new DenseLayer(hidden_dim, label_dim));
+	model->addLayer(new SoftmaxLayer(label_dim, label_dim));
     model->connectLayers();
-    if(optimizer == "sgd") opt = new SGD<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
-    else if(optimizer == "adagrad") opt = new Adagrad<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
-    else if(optimizer == "rmsprop") opt = new RMSProp<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
-    else if(optimizer == "psdsquare") opt = new PSDSquare<double>(learning_rate, batch_size, num_epochs, lambda, reg, beta);
+    if(optimizer == "sgd") opt = new SGD(learning_rate, batch_size, num_epochs, lambda, reg, beta);
+    else if(optimizer == "adagrad") opt = new Adagrad(learning_rate, batch_size, num_epochs, lambda, reg, beta);
+    else if(optimizer == "rmsprop") opt = new RMSProp(learning_rate, batch_size, num_epochs, lambda, reg, beta);
+    else if(optimizer == "psdsquare") opt = new PSDSquare(learning_rate, batch_size, num_epochs, lambda, reg);
     else
     {
         std::cerr << "optimizer is not implemented" << std::endl;
         exit(EXIT_FAILURE);
     }
-
     if (dataset == "mnist")
     {
-        train = new MNIST_CIFARReader<double>("data/mnist_train.csv", 784, 10, ',', false);
-        train->read();
         if(test_size > 0.0)
         {
-            validation = new MNIST_CIFARReader<double>;
+            validation = new MNIST_CIFARReader;
             train->trainTestSplit(*validation, test_size);
             opt->train(*model, model_file, train, validation);
         }
@@ -346,11 +338,9 @@ int trainModel(
     }
      else if (dataset == "emnist")
     {
-        train = new MNIST_CIFARReader<double>("data/emnist-train-valid.csv", 784, 47, ',', false);
-        train->read();
         if(test_size > 0.0)
         {
-            validation = new MNIST_CIFARReader<double>;
+            validation = new MNIST_CIFARReader;
             train->trainTestSplit(*validation, test_size);
             opt->train(*model, model_file, train, validation);
         }
@@ -358,11 +348,9 @@ int trainModel(
     }
       else if (dataset == "cifar10")
     {
-        train = new MNIST_CIFARReader<double>("data/cifar-10-train.csv", 3072, 10, ',', false);
-        train->read();
         if(test_size > 0.0)
         {
-            validation = new MNIST_CIFARReader<double>;
+            validation = new MNIST_CIFARReader;
             train->trainTestSplit(*validation, test_size);
             opt->train(*model, model_file, train, validation);
         }
@@ -370,23 +358,19 @@ int trainModel(
     }
     else
     {
-        train = new GenericReader<double>(dataset, feature_dim, label_dim, ',',  header);
-        train->read();
         if(test_size > 0.0)
         {
-            validation = new GenericReader<double>;
+            validation = new GenericReader;
             train->trainTestSplit(*validation, test_size);
             opt->train(*model, model_file, train, validation);
         }
         else opt->train(*model, model_file, train);
-
     }
     if(opt)delete opt;
     if(model)delete model;
     if(train)delete train;
     if(validation)delete validation;
     return 0;
-
 }
 int testModel(
             std::string mode,
@@ -399,9 +383,9 @@ int testModel(
             )
 {
     std::set<std::string> cost_functions{"mse", "mae", "crossentropy"};
-    Optimizer<double>* opt = new SGD<double>;
-    DataReader<double>* test(nullptr);
-    Network<double>* model(nullptr);
+    Optimizer* opt = new SGD;
+    DataReader* test(nullptr);
+    Network* model(nullptr);
     double accuracy;
     std::string test_info;
 
@@ -410,15 +394,15 @@ int testModel(
         std::cerr << "cost function error: mse, mse, crossentropy" << std::endl;
         exit(EXIT_FAILURE);
     }
-    if(cost_function == "mse") model = new Network<double>(new MSE<double>);
-    else if(cost_function == "mae") model = new Network<double>(new MAE<double>);
-    else if(cost_function == "crossentropy") model =  new Network<double>(new CrossEntropy<double>);
+    if(cost_function == "mse") model = new Network(new MSE);
+    else if(cost_function == "mae") model = new Network(new MAE);
+    else if(cost_function == "crossentropy") model =  new Network(new CrossEntropy);
 
     if (dataset == "mnist")
     {
         try
         {
-            test = new MNIST_CIFARReader<double>("data/mnist_test.csv", 784, 10, ',',  false);
+            test = new MNIST_CIFARReader("data/mnist_test.csv", 784, 10, ',',  false);
             test->read();
         }catch (std::exception &e){
             std::cerr << e.what() << std::endl;
@@ -429,7 +413,7 @@ int testModel(
     {
         try
         {
-            test = new MNIST_CIFARReader<double>("data/emnist-test.csv", 784, 47, ',',  false);
+            test = new MNIST_CIFARReader("data/emnist-test.csv", 784, 47, ',',  false);
             test->read();
         }catch (std::exception &e){
             std::cerr << e.what() << std::endl;
@@ -440,7 +424,7 @@ int testModel(
     {
         try
         {
-            test = new MNIST_CIFARReader<double>("data/cifar-10-test.csv", 3072, 10, ',',  false);
+            test = new MNIST_CIFARReader("data/cifar-10-test.csv", 3072, 10, ',',  false);
             test->read();
         }catch (std::exception &e){
             std::cerr << e.what() << std::endl;
@@ -451,7 +435,7 @@ int testModel(
     {
         try
         {
-            test = new GenericReader<double>(dataset, feature_dim, label_dim, ',',  header);
+            test = new GenericReader(dataset, feature_dim, label_dim, ',',  header);
             test->read();
         }catch (std::exception &e){
             std::cerr << e.what() << std::endl;
@@ -469,3 +453,12 @@ int testModel(
 
     return 0;
 }
+DataReader*  readData(DataReader*  corpus, std::string dataset, uint64_t feature_dim, uint64_t label_dim, bool header)
+{
+	if (dataset == "mnist")corpus = new MNIST_CIFARReader("data/mnist_train.csv", 784, 10, ',', false);
+	else if (dataset == "mnist")corpus = new MNIST_CIFARReader("data/emnist-train-valid.csv", 784, 47, ',', false);
+	else if (dataset == "cifar10")corpus = new MNIST_CIFARReader("data/cifar-10-train.csv", 3072, 10, ',', false);
+	else corpus  = new GenericReader(dataset, feature_dim, label_dim, ',',  header);
+	corpus->read();
+	return corpus;
+}	

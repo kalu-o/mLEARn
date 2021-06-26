@@ -24,14 +24,13 @@ SOFTWARE.
 Authors: Kalu U. Ogbureke
 Change Log: 01.04.2019 - Version 1.0.0
 */
-#ifndef NETWORK_H
-#define NETWORK_H
+#ifndef NETWORKS_H
+#define NETWORKS_H
 #include <vector>
 #include <fstream>
-#include "layer.h"
+#include "layers.h"
 
 namespace mlearn {
-template <class T>
 /**
     The Network class is a classic multi-layer perceptron(MLP)
     consisting of sequences of layers: one or more hidden layers
@@ -61,57 +60,68 @@ class Network
 {
     protected:
         /** A vector of Layer objects */
-        std::vector <Layer<T>> layers;
+        std::vector <Layer*> layers;
         /** A pointer to CostFunction */
-        CostFunction<T>* cost_function;
-        /** Number of layers in the network */
-        uint64_t num_layers;
+        Cost* loss;
         /** Used to decide if training rate
             should be updated/changed for
             Adagrad/RMSProp.
         */
         bool update_rate{false};
         /** Responsible for saving/serialization of members */
-        friend class boost::serialization::access;
+         friend class boost::serialization::access;
         template<class Archive>
         void serialize(Archive & ar, const uint64_t version)
         {
             if (version >= 0)
             {
+				ar.register_type(static_cast<DenseLayer *>(NULL));
+				ar.register_type(static_cast<SigmoidLayer *>(NULL));
+				ar.register_type(static_cast<TanhLayer *>(NULL));
+				ar.register_type(static_cast<ReLULayer *>(NULL));
+				ar.register_type(static_cast<ELULayer *>(NULL));
+				ar.register_type(static_cast<SoftmaxLayer *>(NULL));
+				
+				//ar.template register_type<Layer >();
+				/* ar.template register_type<DenseLayer >();
+				ar.template register_type<SigmoidLayer >();
+				ar.template register_type<TanhLayer >();
+				ar.template register_type<ReLULayer >();
+				ar.template register_type<ELULayer >();
+				ar.template register_type<SigmoidLayer >(); */
                 ar & layers;
-                ar & num_layers;
-                ar & update_rate;
+                //ar & update_rate;
             }
-        }
+        } 
     public:
         /** Default constructor, default cost function MSE */
-        Network(): cost_function{new MSE<T>}{}
+        Network(): loss{new MSE}{}
         /** Overloaded constructor with 1 argument */
-        Network(CostFunction<T>* obj): cost_function{obj}{}
+        Network(Cost* objective): loss{objective}{}
         /** Adds a layer to the network.
 
             @param layer The layer to be added
             @return A reference to self
         */
-        Network<T>& addLayer(const Layer<T>& layer);
+        Network& addLayer(Layer* layer);
         /** Connects all layers in the network and
             returns a reference to self.
         */
-        Network<T>& connectLayers();
+        Network& connectLayers();
         /** Returns the layers in a network */
-        std::vector <Layer<T>>& getLayers(){return layers;}
+        std::vector <Layer*>& getLayers(){return layers;}
         /** Inputs a single data through the network and propagates forward.
 
             @param in_data The input data; a NetNode object
             @return A reference to output data
         */
-        const NetNode<T>& singleForward(const NetNode<T>& in_data);
+        mublas::vector<double>& singleForward(const mublas::vector<double>& in_data);
         /** Inputs delta through the network and propagates backward.
 
             @param in_delta The input delta; a NetNode object
             @return A reference to output delta
         */
-        const NetNode<T>& singleBackward(const NetNode<T>& in_delta);
+        mublas::vector<double>& singleBackward(const mublas::vector<double>& in_delta);
         /** Overloaded function. Updates network parameters.
 
             @param learning_rate Train learning rate
@@ -121,22 +131,9 @@ class Network
             @param beta A momentum term/parameter (between 0 and 1)
             @return A reference to self
         */
-        Network<T>& updateNetwork(double learning_rate,  uint32_t batch_size, double lambda, std::string reg, double beta);
-        /** Overloaded function. Updates network parameters.
-            Applies to Adagrad/RMSProp
-
-            @param learning_rate Training learning rate
-            @param batch_size Batch size used in training
-            @param lambda Regularization parameter (between 0 and 1)
-            @param reg Type of regularization (L1, L2 or None)
-            @param beta A momentum term/parameter (between 0 and 1)
-            @param change_rate Determines if learning rates should be changed
-            @param id Id of the optimizer used: adagrad or rmsprop
-            @return A reference to self
-        */
-        Network<T>& updateNetwork(double learning_rate, uint32_t batch_size, double lambda, std::string reg, double beta, bool change_rate, std::string id = "adagrad");
+        Network& updateNetwork(double learning_rate,  uint32_t batch_size, double lambda, std::string reg, double beta, bool change_rate, std::string id);
         /** Returns the cost function */
-        CostFunction<T>* getCostFunction(){return cost_function;}
+        Cost* getCost(){return loss;}
         /** Sets the update_rate */
         void setUpdateRate(bool value){update_rate = value;}
         /** Gets the update_rate */
@@ -151,9 +148,36 @@ class Network
             @param model_file Name of the model file
             @return A reference to self
         */
-        Network<T>& loadModel(std::string model_file);
+        Network& loadModel(std::string model_file);
         /** Virtual destructor */
-        virtual ~Network(){delete cost_function;}
+        virtual ~Network(){delete loss;}
+};
+struct Model
+{
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+		ar.register_type(static_cast<DenseLayer *>(NULL));
+		ar.register_type(static_cast<SigmoidLayer *>(NULL));
+		ar.register_type(static_cast<TanhLayer *>(NULL));
+		ar.register_type(static_cast<ReLULayer *>(NULL));
+		ar.register_type(static_cast<ELULayer *>(NULL));
+		ar.register_type(static_cast<SoftmaxLayer *>(NULL));
+		/*ar.template register_type<DenseLayer >();
+		ar.template register_type<SigmoidLayer >();
+		ar.template register_type<TanhLayer >();
+		ar.template register_type<ReLULayer >();
+		ar.template register_type<ELULayer >();
+		ar.template register_type<SigmoidLayer >();*/
+		//ar.template register_type< Layer >();
+		//ar & boost::serialization::base_object<Layer>(*this);
+        ar & layers;
+    }
+	public:
+		std::vector<Layer*> layers;
+		Model() = default;
+		Model(std::vector<Layer*> &layers): layers(layers){}
 };
 } // namespace mlearn
 #endif

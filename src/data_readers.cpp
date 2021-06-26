@@ -24,11 +24,10 @@ SOFTWARE.
 Authors: Kalu U. Ogbureke
 Change Log: 01.04.2019 - Version 1.0.0
 */
-#include "data_reader.h"
+#include "data_readers.h"
 
 namespace mlearn {
-template <class T>
-std::vector<int>& DataReader<T>::shuffleIndex(std::vector<int>& indices)const
+std::vector<int>& DataReader::shuffleIndex(std::vector<int>& indices)const
 {
     if (indices.empty())
     {
@@ -41,8 +40,7 @@ std::vector<int>& DataReader<T>::shuffleIndex(std::vector<int>& indices)const
     return indices;
 }
 
-template <class T>
-DataReader<T>& DataReader<T>::destroy()
+DataReader& DataReader::destroy()
 {
 
     if (features.size() == 0) return *this;
@@ -61,9 +59,8 @@ DataReader<T>& DataReader<T>::destroy()
     this->feature_dim = this->label_dim = this->row_dim = 0;
     return *this;
 }
-
-template <class T>
-DataReader<T>& DataReader<T>::trainTestSplit(DataReader<T>& test, double test_size)
+ 
+DataReader& DataReader::trainTestSplit(DataReader& test, double test_size)
 {
     std::cout << "Splitting into train and validation set" << std::endl;
     std::set<int> test_indices;
@@ -77,12 +74,12 @@ DataReader<T>& DataReader<T>::trainTestSplit(DataReader<T>& test, double test_si
         j = distribution(generator);
         if(test_indices.count(j) == 0)
         {
-            test.features.push_back(new NetNode<T>(*features[j]));
-            test.labels.push_back(new NetNode<T>(*labels[j]));
+            test.features.push_back(new mublas::vector<double>(*features[j]));
+            test.labels.push_back(new mublas::vector<double>(*labels[j]));
             delete features[j];
             delete labels[j];
             features[j] = nullptr;
-            labels[j] = nullptr;
+            labels[j] = nullptr; 
             test_indices.insert(j);
             ++i;
         }
@@ -97,27 +94,24 @@ DataReader<T>& DataReader<T>::trainTestSplit(DataReader<T>& test, double test_si
     return test;
 }
 
-template <class T>
-MNIST_CIFARReader<T>::MNIST_CIFARReader(const MNIST_CIFARReader<T>& arg): DataReader<T>(arg.file_name, arg.sep, arg.header)
+MNIST_CIFARReader::MNIST_CIFARReader(const MNIST_CIFARReader& arg): DataReader(arg.file_name, arg.sep, arg.header)
 {
     for (uint64_t i = 0; i < arg.row_dim; ++i)
     {
         try{
-            this->features.push_back(new Node<T>(*arg.features[i]));
-            this->labels.push_back(new Node<T>(*arg.labels[i]));
+            this->features.push_back(new mublas::vector<double>(*arg.features[i]));
+            this->labels.push_back(new mublas::vector<double>(*arg.labels[i]));
         }catch (std::bad_alloc &e){
             std::cerr << e.what() << std::endl;
             exit(EXIT_FAILURE);
         }
-
     }
     this->feature_dim = arg.feature_dim;
     this->label_dim = arg.label_dim;
     this->row_dim = arg.row_dim;
 }
 
-template <class T>
-MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::operator=(const MNIST_CIFARReader<T>& arg)
+MNIST_CIFARReader& MNIST_CIFARReader::operator=(const MNIST_CIFARReader& arg)
 {
     if(this == &arg) return *this;
     for (uint64_t i = 0; i < arg.row_dim; ++i)
@@ -131,8 +125,7 @@ MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::operator=(const MNIST_CIFARReader<T>
     return *this;
 }
 
-template <class T>
-MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::read()
+MNIST_CIFARReader& MNIST_CIFARReader::read()
 {
     std::cout << "Reading data starts..." << std::endl;
     std::string csv_line;
@@ -144,7 +137,7 @@ MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::read()
     while(getline(ifile, csv_line))
     {
         std::istringstream csv_stream(csv_line);
-        mublas::vector<T> feat(this->feature_dim * 1), label(this->label_dim, 0);
+        mublas::vector<double> feat(this->feature_dim * 1), label(this->label_dim, 0);
         std::string csv_element;
         uint32_t i = 0;
         while(getline(csv_stream, csv_element, this->sep))
@@ -156,15 +149,15 @@ MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::read()
             }
             else
             {
-                feat[i - 1] = atof(csv_element.c_str())/MAX_MNIST_CIFAR_VALUE;
+                feat[i - 1] = atof(csv_element.c_str())/255.0;
                 //feat[i - 1] = atof(csv_element.c_str());
             }
             ++i;
         }
 
         try{
-            this->features.push_back(new NetNode<double>{feat});
-            this->labels.push_back(new NetNode<double>{label});
+            this->features.push_back(new mublas::vector<double>{feat});
+            this->labels.push_back(new mublas::vector<double>{label});
         }catch (std::bad_alloc &e){
             std::cerr << e.what();
             exit(EXIT_FAILURE);
@@ -172,15 +165,14 @@ MNIST_CIFARReader<T>& MNIST_CIFARReader<T>::read()
         feat.clear();
         label.clear();
     }
-    this->feature_dim = this->features[0]->getDataSize();
-    this->label_dim = this->labels[0]->getDataSize();
+    this->feature_dim = this->features[0]->size();
+    this->label_dim = this->labels[0]->size();
     this->row_dim = this->labels.size();
     std::cout << "Reading data ends" << std::endl;
     return *this;
 }
 
-template <class T>
-GenericReader<T>& GenericReader<T>::read()
+GenericReader& GenericReader::read()
 {
     std::cout << "Reading data starts..." << std::endl;
     std::string line;
@@ -193,7 +185,7 @@ GenericReader<T>& GenericReader<T>::read()
     while(getline(ifile, line))
     {
         std::istringstream stream(line);
-        mublas::vector<T> feat(this->feature_dim), label(this->label_dim, 0);
+        mublas::vector<double> feat(this->feature_dim), label(this->label_dim, 0);
         std::string element;
         uint32_t i = 0;
         while(getline(stream, element, this->sep))
@@ -207,8 +199,8 @@ GenericReader<T>& GenericReader<T>::read()
             ++i;
         }
         try{
-            this->features.push_back(new NetNode<double>{feat});
-            this->labels.push_back(new NetNode<double>{label});
+            this->features.push_back(new mublas::vector<double>{feat});
+            this->labels.push_back(new mublas::vector<double>{label});
         }catch (std::bad_alloc &e){
             std::cerr << e.what() << std::endl;
             exit(EXIT_FAILURE);
@@ -216,15 +208,14 @@ GenericReader<T>& GenericReader<T>::read()
         feat.clear();
         label.clear();
     }
-    this->feature_dim = this->features[0]->getDataSize();
-    this->label_dim = this->labels[0]->getDataSize();
+    this->feature_dim = this->features[0]->size();
+    this->label_dim = this->labels[0]->size();
     this->row_dim = this->labels.size();
     std::cout << "Reading data ends" << std::endl;
     return *this;
 }
 
-template <class T>
-IrisReader<T>& IrisReader<T>::read()
+IrisReader& IrisReader::read()
 {
     std::cout << "Reading data starts..." << std::endl;
     std::string line;
@@ -238,7 +229,7 @@ IrisReader<T>& IrisReader<T>::read()
     while(getline(ifile, line))
     {
         std::istringstream stream(line);
-        mublas::vector<T> feat(this->feature_dim), label(this->label_dim, 0);
+        mublas::vector<double>feat(this->feature_dim), label(this->label_dim, 0);
         std::string element;
         uint32_t i = 0;
         while(getline(stream, element, this->sep))
@@ -250,12 +241,12 @@ IrisReader<T>& IrisReader<T>::read()
                 else if (element == "Iris-versicolor") label[1] = 1;
                 else if (element == "Iris-virginica") label[0] = 1;
             }
-            else feat[i - 1] = atof(element.c_str())/MAX_IRIS_VALUE;
+            else feat[i - 1] = atof(element.c_str())/7.9;
             ++i;
         }
         try{
-            this->features.push_back(new NetNode<double>{feat});
-            this->labels.push_back(new NetNode<double>{label});
+            this->features.push_back(new mublas::vector<double>{feat});
+            this->labels.push_back(new mublas::vector<double>{label});
         }catch (std::bad_alloc &e){
             std::cerr << e.what() << std::endl;
             exit(EXIT_FAILURE);
@@ -263,15 +254,12 @@ IrisReader<T>& IrisReader<T>::read()
         feat.clear();
         label.clear();
     }
-    this->feature_dim = this->features[0]->getDataSize();
-    this->label_dim = this->labels[0]->getDataSize();
+    this->feature_dim = this->features[0]->size();
+    this->label_dim = this->labels[0]->size();
     this->row_dim = this->labels.size();
     std::cout << "Reading data ends" << std::endl;
     return *this;
 }
-template class DataReader<double>;
-template class MNIST_CIFARReader<double>;
-template class GenericReader<double>;
 } // namespace mlearn
 
 

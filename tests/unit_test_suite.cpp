@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_SUITE_END()
 /**
     Unit test for the Layer class. Performs general tests.
 */
-BOOST_AUTO_TEST_SUITE (LayerSuite)
+BOOST_AUTO_TEST_SUITE (Layer)
 BOOST_AUTO_TEST_CASE(general_test)
 {
     std::cout << "Start Layer class test" << std::endl;

@@ -24,18 +24,17 @@ SOFTWARE.
 Authors: Kalu U. Ogbureke
 Change Log: 01.04.2019 - Version 1.0.0
 */
-#ifndef DATA_READER_H
-#define DATA_READER_H
+#ifndef DATA_READERS_H
+#define DATA_READERS_H
 #include <fstream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <vector>
 #include <set>
-#include "libutil.h"
+#include "utils.h"
 
 namespace mlearn {
-template <class T>
 /**
     The DataReader class is the base class responsible for
     reading train/test dataset into features/labels. 3 different
@@ -48,9 +47,9 @@ class DataReader
         /** Name of input file */
         const std::string file_name;
         /** Vector of Node pointers for Features */
-        std::vector<Node<T>*> features;
+        vec_vec_ptr_double features;
         /** Vector of Node pointers for labels */
-        std::vector<Node<T>*> labels;
+        vec_vec_ptr_double labels;
         /** Dimension of Features */
         uint64_t feature_dim;
         /** Dimension of labels */
@@ -94,7 +93,7 @@ class DataReader
                   label_dim{label_dim},
                   sep{sep}{}
         /** Copy constructor */
-        DataReader(const DataReader<T>& arg):
+        DataReader(const DataReader& arg):
                   file_name{arg.file_name},
                   features{arg.features},
                   labels{arg.labels},
@@ -102,9 +101,9 @@ class DataReader
                   label_dim{arg.label_dim},
                   row_dim{arg.row_dim}{}
         /** Returns features */
-        const std::vector<Node<T>*>& getFeatures()const{return features;}
+        const vec_vec_ptr_double& getFeatures()const{return features;}
         /** Returns labels */
-        const std::vector<Node<T>*>& getLabels()const{return labels;}
+        const vec_vec_ptr_double& getLabels()const{return labels;}
         /** Returns feature dimension */
         uint64_t getFeatureDim()const{return feature_dim;}
         /** Returns label dimension */
@@ -112,9 +111,9 @@ class DataReader
         /** Returns number of instances */
         uint64_t getRowDim()const{return row_dim;}
         /** Reads dataset file into features and labels */
-        virtual DataReader<T>& read() = 0;
+        virtual DataReader& read() = 0;
         /** Assignment operator */
-        DataReader<T>& operator=(const DataReader<T>&);
+        DataReader& operator=(const DataReader&);
         /**
             This is for shuffling train dataset for use with stochastic
             gradient descent optimizers and variants.
@@ -129,18 +128,17 @@ class DataReader
             @param test An empty DataReader object that will hold validation set
             @return test_size Percentage of train set used for validation
         */
-        DataReader<T>& trainTestSplit(DataReader<T>& test, double test_size = 0.0);
+        DataReader& trainTestSplit(DataReader& test, double test_size = 0.1);
         /**
             Responsible for releasing/deleting dynamically allocated memory.
 
             @return Reference to empty DataReader object
         */
-        DataReader<T>& destroy();
+        DataReader& destroy();
         /** Virtual destructor */
         virtual ~DataReader(){destroy();}
 };
 
-template <class T>
 /**
     The MNIST_CIFARReader class extends the DataReader class.
     It is responsible for reading the MNIST_CIFAR dataset into feature/label.
@@ -163,62 +161,60 @@ template <class T>
         mnist.trainTestSplit(test, 0.1);
     @endcode
 */
-class MNIST_CIFARReader: public DataReader<T>
+class MNIST_CIFARReader: public DataReader
 {
     public:
         /** Default constructor */
-        MNIST_CIFARReader(): DataReader<T>(){}
+        MNIST_CIFARReader(): DataReader(){}
         /** Overloaded constructor with 3 arguments. The
             number of features is 784(28 * 28) and the
             label dimension is 10 ("one_hot" set to true).
         */
-        MNIST_CIFARReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, char sep, bool header): DataReader<T>(file_name, feature_dim, label_dim, sep, header){}
+        MNIST_CIFARReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, char sep, bool header): DataReader(file_name, feature_dim, label_dim, sep, header){}
         /** Overloaded constructor with 2 arguments */
-        MNIST_CIFARReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, bool one_hot): DataReader<T>(file_name, feature_dim, label_dim, one_hot){}
+        MNIST_CIFARReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, bool one_hot): DataReader(file_name, feature_dim, label_dim, one_hot){}
         /** Copy constructor.
 
             @param argv MNIST_CIFARReader object to be copied.
         */
-        MNIST_CIFARReader(const MNIST_CIFARReader<T>& argv);
+        MNIST_CIFARReader(const MNIST_CIFARReader& argv);
         /**
             Overloaded assignment operator.
 
             @param argv Reference to the second operand
             @return Reference to self
         */
-        MNIST_CIFARReader<T>& operator=(const MNIST_CIFARReader<T>& argv);
+        MNIST_CIFARReader& operator=(const MNIST_CIFARReader& argv);
         /**
             Reads a text file containing features and labels.
 
             @return Reference to self.
         */
-        MNIST_CIFARReader<T>& read();
+        MNIST_CIFARReader& read();
         /** Virtual destructor */
         virtual ~MNIST_CIFARReader(){}
 };
 
-template <class T>
 /**
     The IrisReader class extends the DataReader class.
     It is responsible for reading the Iris dataset into feature/label
     (https://archive.ics.uci.edu/ml/datasets/iris)
     The class implements the "read" method specific to the Iris dataset.
 */
-class IrisReader: public DataReader<T>
+class IrisReader: public DataReader
 {
     public:
-        IrisReader(): DataReader<T>(){}
-        IrisReader(const std::string file_name): DataReader<T>(file_name){}
-        IrisReader(const std::string file_name, char sep, bool header): DataReader<T>(file_name, sep, header){}
+        IrisReader(): DataReader(){}
+        IrisReader(const std::string file_name): DataReader(file_name){}
+        IrisReader(const std::string file_name, char sep, bool header): DataReader(file_name, sep, header){}
         IrisReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, char sep):
-                  DataReader<T>(file_name, feature_dim, label_dim, sep){}
-        IrisReader(const IrisReader<T>& arg): DataReader<T>(arg){}
-        IrisReader<T>& operator=(const IrisReader<T>&);
-        IrisReader<T>& read();
+                  DataReader(file_name, feature_dim, label_dim, sep){}
+        IrisReader(const IrisReader& arg): DataReader(arg){}
+        IrisReader& operator=(const IrisReader&);
+        IrisReader& read();
         virtual ~IrisReader(){}
 };
 
-template <class T>
 /**
     The GenericReader class extends the DataReader class and implements
     the "read" method. It is responsible for reading any text dataset into
@@ -239,21 +235,21 @@ template <class T>
     @endcode
 
 */
-class GenericReader: public DataReader<T>
+class GenericReader: public DataReader
 {
     public:
-        GenericReader(): DataReader<T>(){}
+        GenericReader(): DataReader(){}
         GenericReader(const std::string file_name, char sep, bool header):
-                     DataReader<T>(file_name, sep, header){}
+                     DataReader(file_name, sep, header){}
         GenericReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, char sep):
-                     DataReader<T>(file_name, feature_dim, label_dim, sep){}
+                     DataReader(file_name, feature_dim, label_dim, sep){}
         GenericReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, char sep, bool header):
-                     DataReader<T>(file_name, feature_dim, label_dim, sep, header){}
+                     DataReader(file_name, feature_dim, label_dim, sep, header){}
         GenericReader(const std::string file_name, uint64_t feature_dim, uint64_t label_dim, bool one_hot):
-                     DataReader<T>(file_name, feature_dim, label_dim, one_hot){}
-        GenericReader(const GenericReader<T>& arg): DataReader<T>(arg){}
-        GenericReader<T>& operator=(const GenericReader<T>&);
-        GenericReader<T>& read();
+                     DataReader(file_name, feature_dim, label_dim, one_hot){}
+        GenericReader(const GenericReader& arg): DataReader(arg){}
+        GenericReader& operator=(const GenericReader&);
+        GenericReader& read();
         virtual ~GenericReader(){}
 };
 } // namespace mlearn
