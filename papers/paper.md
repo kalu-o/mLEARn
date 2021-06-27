@@ -45,7 +45,8 @@ Network, DataReader and Optimizer. The Node class is the fundamental data struct
 used; and NetNode is an extension of the Node class used for multi-layer perceptron. The Activation class handles activations in the network. Currently, the functions implemented are sigmoid, tanh, rectified linear unit (ReLU), leaky ReLU, identity, softmax
 and exponential linear unit (ELU). The CostFunction class is responsible for objective/loss functions. Cost functions implemented are mean squared error (MSE), mean absolute error (MAE) and cross entropy.
 
-![](node.PNG)     ![](cost_function.PNG)      
+![](node.PNG)     			![](cost_function.PNG)      
+*Figure 1: The Node class*	*Figure 2: The CostFunction class*
 
 The Network class is a classic MLP consisting of sequences of layers, i.e. one or more
 hidden layers and an output layer. The DataReader class is the base class responsible for
@@ -53,9 +54,9 @@ reading train/test dataset into features and labels. Three different readers are
 namely MNISTReader, GenericReader and IrisReader. The Optimizer class is the base class responsible
 for training algorithms. Three optimizers are currently implemented: mini-batch stochastic gradient descent [@Kiefer:1952; @Ruder16], adaptive gradient (Adagrad) [@Duchi:2011] and root mean square propagation (RMSProp) [@Tieleman:2012].
 
-![](reader.PNG) ![](optimizer.PNG)
+![](reader.PNG) 					![](optimizer.PNG)
+*Figure 3: The DataReader class*	*Figure 4: The Optimizer class*
 
-A novel implicit adaptive learning rate method (PSDSquare) implemented is currently being considered for publication by IEEE. 
 A number of new enhancements such as automatic differentiation, distributed computing and GPU support will be added in future.
 
 # Acknowledgements
