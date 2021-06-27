@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Authors: Kalu U. Ogbureke
-Change Log: 21.05.2019 - Version 1.0.1
+Change Log: 21.05.2019 - Version 1.0.0
 Change Log: 01.04.2019 - Version 1.0.0
 */
 #include "layer.h"
