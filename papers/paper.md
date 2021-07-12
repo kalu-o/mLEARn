@@ -36,7 +36,7 @@ and feed-forward architectures [@Bishop:1995]. Deep learning is currently an act
 # Statement of Need
 
 There are currently available popular deep learning frameworks such as MXNet [@mxnet], Caffe [@caffe] and TensorFlow [@tensorflow]. Students often use these as off-the-shelf machine learning tools and have little or no control over the codes. One of the reasons for 
-this is because the codes are advanced and production ready. ``mLEARn`` addresses these as it can be used as an off-the-shelf machine learning tool. Furthermore, the coding style makes it easier to apply what was learnt in machine learning/C++ courses and extend the functionalities. These make it easier to understand machine learning algorithms from first principle and extend state-of-the-art.
+this is because the codes are advanced and production ready. ``mLEARn`` addresses these as it can be used as an off-the-shelf machine learning tool. Furthermore, the coding style makes it easier to apply what was learnt in machine learning/C++ courses and extend the functionalities. These make it easier to understand machine learning algorithms from first principles and extend state-of-the-art.
 
 # Architecture of mLEARn
 
