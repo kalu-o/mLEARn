@@ -65,6 +65,32 @@ for training algorithms. Three optimizers are currently implemented: mini-batch 
 
 A number of new enhancements such as automatic differentiation, distributed computing and GPU support will be added in future.
 
+# Use in Teaching and Learning Context
+
+The following describes some use cases in the context of teaching and learning.
+1. Read custom data set
+
+This will involve extending the DataReader class in data_reader.cpp to read a custom data set. The learning objective is to enable students extend the functionalities of a base class.
+
+2. Activation functions
+
+At the end of this exercise, students are expected to implement common activation functions and their derivatives. A number of activation functions such as Sigmoid, Tanh, etc. are already provided. Possible course works include:
+* Removing the implementations of these functions and asking students, for example, to implement the Sigmoid function and its derivative.
+* Extending with a novel activation function.
+
+3. Understanding basic learning algorithms (back-propagation)
+
+The back-propagation algorithm is a basic machine learning algorithm often taught in foundation courses in deep learning. Students should be able to Implement the forward and backward pass. These are already implemented in the Layer class.
+
+4. Advanced deep Learning algorithms (RMS-Prop, Adagrad, etc)
+
+Adaptive learning algorithms is an active research area in deep learning. The Optimizer class provided contains an implementation of RMS-Prop and Adagrad. These implementations
+could be removed and students asked to implement these learning algorithms. Furthermore, other ones such as Adams, Adadelta, etc., are not implemented yet. Their implementation is a good exercise that will demonstrate grounding in adaptive learning algorithms.
+
+5. Extending the architecture of the network (advanced)
+
+The current implementation of the architecture needs improvement. One such area is refactoring the 'Layer' class into a base class and deriving sigmoid, tanh, relu and convolution layers from this.
+
 # Acknowledgements
 
 The core work in neural networks and convergence was done as part of the DEA thesis "Training Multi-layer Perceptron using Genetic Algorithms", while the author was with GRLMC at Rovira i Virgili University, Tarragona. The author would
